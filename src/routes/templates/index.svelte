@@ -8,8 +8,7 @@
         getTemplates();
     });
     function getTemplates() {
-        // fetch("https://www.tbbt.com.tw/questionnaire/templates")
-        fetch("http://localhost:8080/questionnaire/templates")
+        fetch("https://www.tbbt.com.tw/questionnaire/templates",{credentials:'include'})
         .then(function(response) {
             return response.json();
         })

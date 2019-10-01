@@ -5,11 +5,10 @@
     let totalPage = 0
     let questionnaires = [];
     onMount(() => {
-        getTemplates();
+        getQuestionnaires();
     });
-    function getTemplates() {
-        // fetch("https://www.tbbt.com.tw/questionnaire/templates")
-        fetch("http://localhost:8080/questionnaire/questionnaires")
+    function getQuestionnaires() {
+        fetch("https://www.tbbt.com.tw/questionnaire/questionnaires",{credentials:'include'})
         .then(function(response) {
             return response.json();
         })
@@ -18,9 +17,6 @@
             questionnaires = data
         })
     }
-
-
-    // console.log(templates)
     $: totalPage = Math.ceil(questionnaires.length / countOfPage)
     $: pageStart = (currPage - 1) * countOfPage
     $: filteredList = questionnaires.slice(pageStart, pageStart + countOfPage)

@@ -1,8 +1,7 @@
 <script context="module">   
     export async function preload(page){
         const {slug} = page.params
-        // const res = await this.fetch(`https://www.tbbt.com.tw/questionnaire/templates/${slug}`)
-        const res = await this.fetch(`http://localhost:8080/questionnaire/questionnaires/${slug}`)
+        const res = await this.fetch(`https://www.tbbt.com.tw/questionnaire/questionnaires/${slug}`)
         let questionnaire = await res.json()
         questionnaire['id'] = slug
         console.log(questionnaire)
@@ -13,11 +12,6 @@
 <script>
     export let questionnaire
     import moment from 'moment'
-    (function test(){
-        console.log('questionnaire: ',questionnaire)
-        console.log('id: ', questionnaire.id)
-        console.log('questions: ', questionnaire.questions)
-    })()
 </script>
 
 <svelte:head>

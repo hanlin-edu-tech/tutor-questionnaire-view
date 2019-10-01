@@ -46,7 +46,6 @@
 		}
 		console.log('data ', JSON.stringify(data))
 		fetch('https://www.tbbt.com.tw/questionnaire/templates/create',
-		// fetch('http://localhost:8080/questionnaire/templates/create',
 					{			
 					method:'post',
 					headers: {

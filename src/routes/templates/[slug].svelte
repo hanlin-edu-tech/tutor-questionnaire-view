@@ -1,8 +1,7 @@
     <script context="module">   
     export async function preload(page){
         const {slug} = page.params
-        // const res = await this.fetch(`https://www.tbbt.com.tw/questionnaire/templates/${slug}`)
-        const res = await this.fetch(`http://localhost:8080/questionnaire/templates/${slug}`)
+        const res = await this.fetch(`https://www.tbbt.com.tw/questionnaire/templates/${slug}`)
         let template = await res.json()
         template['id'] = slug
         return {template}
