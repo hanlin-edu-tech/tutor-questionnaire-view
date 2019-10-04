@@ -1,5 +1,6 @@
 <script>
 	import {onMount} from 'svelte'
+	import Question from './Question.svelte'
 	let template
 	let dataArr = new Array()
 	const questionId = window.location.search.substring(4,window.location.search.length)
@@ -66,8 +67,9 @@
 		console.log('convert answer: ', dataArr)
 	}
 
-	function test(){
-		console.log(dataArr)
+	function test(bind){
+		console.log('dataArr:: ',dataArr)
+		console.log('bind: ',bind)
 	}
 </script>
 
@@ -83,66 +85,11 @@
 		<form action="" id="form">
 			<div class="form-body">
 			{#each template.questions as q, i}
-					{#if q.type === '單選題'}
-						<div class="form-group">
-							<div class="form-topic">{i+1}. {q.topic}</div>
-							{#if q.required === true}
-								<div class="form-must">*請填寫這個欄位*</div>
-							{/if}
-							<div class="form-item">
-								{#each q.options as o, j}
-									<div class="control">
-										{#if q.required === true && j === 0}
-											<input id="q{i}o{j}" type="radio" name="single{i}" value="{o}" required bind:group="{dataArr[i].answer}" on:click="{test}">
-										{:else}
-											<input id="q{i}o{j}" type="radio" name="single{i}" value="{o}" bind:group="{dataArr[i].answer}" on:click="{test}">
-										{/if}
-										<label for="q{i}o{j}">{o}</label>
-										<!-- <div class="check"></div> -->
-									</div>	
-								{/each}
-							</div>
-						</div>
-					{:else if q.type === '多選題'}
-						<div class="form-group">
-							<div class="form-topic">{i+1}. {q.topic}</div>
-							{#if q.required === true}
-								<div class="form-must">*請填寫這個欄位*</div>
-							{/if}						
-							<div class="multiple">
-								<div class="multiple-text">複選</div>
-							</div>
-							<div class="form-item" id="multi{i}">
-								{#each q.options as o, j}
-									<div class="control">
-										<input id="q{i}o{j}" type="checkbox" name="multi{i}" value="{o}" bind:group="{dataArr[i].answer}" on:click="{test}">
-										<label for="q{i}o{j}">{o}</label>
-										<!-- <div class="check"></div> -->
-									</div>
-								{/each}
-							</div>
-						</div>
-					{:else}
-						<div class="form-group">
-							<div class="form-topic">{i+1}. {q.topic}</div>
-							{#if q.required === true}
-								<div class="form-must">*請填寫這個欄位*</div>
-							{/if}
-							<div class="form-item">
-								{#if q.required === true}
-									<textarea placeholder="請填入文字" name="qa{i}" data-subject-answer="500" required bind:value="{dataArr[i].answer}" on:click="{test}"></textarea>
-								{:else}
-									<textarea placeholder="請填入文字" name="qa{i}" data-subject-answer="500" bind:value="{dataArr[i].answer}" on:click="{test}"></textarea>
-								{/if}
-								
-							</div>
-						</div>
-					{/if}
-				
+				<Question question="{q}" index="{i}" dataArr="{dataArr}" on:test="{test}"/>
 			{/each}
 			</div>
 			<div class="row-btn">
-				<button class="btn-send" on:click="{submit}">送出</button>
+				<button class="btn-send" on:click|preventDefault="{submit}">送出</button>
 			</div>		
 		</form>
 	</div>
