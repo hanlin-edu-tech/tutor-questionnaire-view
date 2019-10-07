@@ -14,8 +14,9 @@
 	}
 </style>
 
-<Nav {segment}/>
-
+{#if segment !== undefined}
+	<Nav {segment}/>
+{/if}
 <main>
 	<slot></slot>
 </main>

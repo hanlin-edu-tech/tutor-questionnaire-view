@@ -4,7 +4,8 @@
         const res = await this.fetch(`https://www.tbbt.com.tw/questionnaire/questionnaires/${slug}`)
         let questionnaire = await res.json()
         questionnaire['id'] = slug
-        console.log(questionnaire)
+        console.log("questionnaire: ",questionnaire)
+        
         return {questionnaire}
     }
 </script>
@@ -12,6 +13,9 @@
 <script>
     export let questionnaire
     import moment from 'moment'
+    console.log("started moment : ",moment(questionnaire.started).format('YYYY / MM / DD , h:mm a'))
+    console.log("started : ", questionnaire.started)
+    console.log(questionnaire.started)
 </script>
 
 <svelte:head>
@@ -26,7 +30,7 @@
         </tr>
         <tr>
             <td class="table-info">填寫日期</td>
-            <td>{ moment(questionnaire.started).format('YYYY / MM / DD , h:mm a') }</td>
+            <td>{ moment(questionnaire.started.$date).format('YYYY / MM / DD , h:mm a') }</td>
         </tr>
         <tr>
             <td class="table-info">填寫者</td>

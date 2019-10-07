@@ -47,11 +47,11 @@
         </tr>
         <tr>
             <td class="table-info" width="150">樣版連結    <span class="badge badge-info" on:click="{copyLink}">copy</span></td>
-            <td id="url">{ `https://${window.location.host}/templates/${template.id}` }</td>
+            <td id="url">{ `https://${window.location.host}/app/survey/index.html?id=${template.id}` }</td>
         </tr>
         <tr>
             <td class="table-info">創建日期</td>
-            <td>{ moment(template.createDate).format('YYYY / MM / DD , h:mm a') }</td>
+            <td>{ moment(template.createDate.$date).format('YYYY / MM / DD , h:mm a') }</td>
         </tr>
         <tr>
             <td class="table-info">樣版作者</td>

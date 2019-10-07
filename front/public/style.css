@@ -182,7 +182,7 @@ body {
   .modal-success .success-banner {
     width: 100%;
     height: 240px;
-    background-image: url("../img/congrate.png");
+    background-image: url("./img/congrate.png");
     background-size: cover;
     background-position: center center; }
   .modal-success .success-text {

@@ -47,13 +47,11 @@
 		display: block;
 	}
 </style>
-
-<nav>
-	<ul>
-		<!-- <li><a class='{segment === undefined ? "selected" : ""}' href='.'>home</a></li> -->
-		<li><a class='{segment === undefined ? "selected" : ""}' href='login'>登入</a></li>
-		<li><a class='{segment === "create" ? "selected" : ""}' href='create'>新增問卷</a></li>
-		<li><a rel=prefetch class='{segment === "templates" ? "selected" : ""}' href='templates'>樣板列表</a></li>
-		<li><a rel=prefetch class='{segment === "questionnaires" ? "selected" : ""}' href='questionnaires'>問卷列表</a></li>
-	</ul>
-</nav>
+	<nav>
+		<ul>
+			<li><a class='{segment === "create" ? "selected" : ""}' href='create'>新增問卷</a></li>
+			<li><a rel=prefetch class='{segment === "templates" ? "selected" : ""}' href='templates'>樣板列表</a></li>
+			<li><a rel=prefetch class='{segment === "questionnaires" ? "selected" : ""}' href='questionnaires'>問卷列表</a></li>
+		</ul>
+	</nav>
+	

@@ -56,7 +56,7 @@
         <div class="col-md-4 colTitle">
             問卷名稱
         </div>
-        <div class="col-md-4 colTitle">填寫者</div>
+        <div class="col-md-4 colTitle"></div>
         <div class="col-md-4 colTitle">填寫時間</div>
         </li>
     </ul>
@@ -65,7 +65,7 @@
             <li class="list-group-item list-group-item-action" style="display:flex">
                 <a rel='prefetch' href="questionnaires/{questionnaires.id}">
                     <div class="col-md-4">{questionnaires.name}</div>
-                    <div class="col-md-4">{questionnaires.user}</div>
+                    <div class="col-md-4"></div>
                     <div class="col-md-4">{moment(questionnaires.started).format('YYYY / MM / DD , h:mm a')}</div>
                 </a>
             </li>
