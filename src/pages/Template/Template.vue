@@ -63,9 +63,6 @@ export default {
             this.id = id
             const host = window.location.hostname
             let contextPath = ''
-            if(host === 'www.ehanlin.com.tw'){
-                contextPath = "/tutor-questionnaire"
-            }
             fetch(`https://${host}${contextPath}/questionnaire/templates/${id}`)
             .then(res=> {
                 return res.json();

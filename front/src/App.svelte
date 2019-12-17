@@ -21,9 +21,6 @@
 		}
 		const host = window.location.hostname
         let contextPath = ''
-        if(host === 'www.ehanlin.com.tw'){
-            contextPath = "/tutor-questionnaire"
-        }
 		await fetch(`https://${host}${contextPath}/questionnaire/templates/${questionId}`)
 		.then(res => {
 			return res.json()
@@ -57,9 +54,6 @@
 		convertAns()
 		const host = window.location.hostname
         let contextPath = ''
-        if(host === 'www.ehanlin.com.tw'){
-            contextPath = "/tutor-questionnaire"
-        }
 		fetch(`https://${host}${contextPath}/questionnaire/questionnaire/create?templateId=${questionId}`,{
 			method: "post",
 			body: JSON.stringify(questionnaire),
