@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>登入</title>
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id"
+    content="745967530532-kr1mhm9c46r08l43oeanmhtd04ehgodp.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+  <script>
+    function onSignIn(googleUser) {
+      console.log('on sign in')
+      console.log(googleUser)
+      const id_token = googleUser.getAuthResponse().id_token
+      let host = window.location.hostname
+      if(host !== "www.tbbt.com.tw"){
+        host = "bg.ehanlin.com.tw"
+      }
+      console.log(id_token)
+      fetch("https://"+host+"/questionnaire/tokensignin?idtoken="+id_token,{
+          method: 'POST',
+          credentials: 'include'
+      }).then(res => {
+          return res.json()
+      }).then(result => {
+          if(result){
+            window.location.href="./templateList.html"
+          }else {
+            alert('登入失敗！請重新登入')
+          }
+      })
+      .catch(err => {
+          console.log(err)
+      })
+    }
+  </script>
+</body>
+
+</html>

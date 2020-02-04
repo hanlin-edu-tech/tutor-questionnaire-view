@@ -1,4 +1,3 @@
-const fs = require("fs");
 const gulp = require("gulp");
 const gcPub = require("gulp-gcloud-publish");
 
@@ -9,7 +8,7 @@ const bucketNameForProd = "tutor-apps";
 let projectId = "tutor-test-238709";
 let keyFileName = "tutor-test.json";
 
-const projectName = "app/survey";
+const projectName = "app/questionnaire";
 
 
 let uploadGCS = bucketName => {
@@ -17,10 +16,9 @@ let uploadGCS = bucketName => {
         projectId = "tutor-204108"
         keyFileName = "tutor.json"
     }
-
     return gulp
-        .src(["public/**"], {
-            base: `${__dirname}/public/`
+        .src(["dist/**"], {
+            base: `${__dirname}/dist/`
         })
         .pipe(
             gcPub({

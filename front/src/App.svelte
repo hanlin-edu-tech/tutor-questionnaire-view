@@ -6,21 +6,33 @@
 		started: null,
 		finished: null,
 		questions: [],
-		template: ''
+		template: '',
+		finishMsg: '',
+		callBackUrl: ''
 	}
 	let questions = new Array()
 	let success
 	let callBackUrl
 	const questionId = window.location.search.substring(4,window.location.search.length)
 	onMount(async () => {
-		await fetch(`https://www.tbbt.com.tw/questionnaire/templates/${questionId}`)
+		if(window.location.protocol === "http:"){
+			const path = window.location.href.split(":")[1]		
+			window.location.href = `https:${path}`
+		}
+		const host = window.location.hostname
+        let contextPath = ''
+		await fetch(`https://${host}${contextPath}/questionnaire/templates/${questionId}`,{
+			method: "get",
+			credentials: 'include'
+		})
 		.then(res => {
 			return res.json()
 		})
 		.then(data => {
 			questionnaire.started = new Date()
 			questionnaire.template = questionId
-			callBackUrl = data.callBackUrl
+			questionnaire.callBackUrl = data.callBackUrl
+			questionnaire.finishMsg = data.finishMsg
 			template = data
 			const count = data.questions.length
 			for(let i=0; i<count; i++){
@@ -34,46 +46,108 @@
 			}
 		})
 	});
-	function submit(){
-		console.log('submit')
+	function submit(){		
+		// console.log('questions: ', questionnaire.questions)
 		if(!validate()){
 			success = false
 			return false
 		}
 		questionnaire.finished = new Date()
-		questionnaire.questions = questions
+		questionnaire.questions = questions	
 		convertAns()
-		console.log("questionnaire: ",questionnaire)
-		fetch(`https://www.tbbt.com.tw/questionnaire/questionnaire/create?templateId=${questionId}`,{
+		const host = window.location.hostname
+        let contextPath = ''
+		fetch(`https://${host}${contextPath}/questionnaire/questionnaire/create?templateId=${questionId}`,{
 			method: "post",
 			body: JSON.stringify(questionnaire),
 			headers: {
 				'content-type': 'application/json'
 			},
-			credentials: 'include'
+			credentials: 'include'	
 		})
 		.then(function(body){
-			if(body.ok){success = true}
-			return body.text();
-		})
-		.then(data => {
-			console.log(JSON.stringify(data))
-			if(callBackUrl !== ""){
-				window.location.href = callBackUrl
+			if(body.ok){
+				success = true
+				if(questionnaire.callBackUrl.trim() !== ""){
+					setTimeout(()=>{window.location.href = questionnaire.callBackUrl}, 700)
+					
+				}
 			}
+		
 		})
 		
 	}
 	function validate(){
 		let validate = true
 		questions.forEach((data, index) => {
+			document.getElementById("q"+index).classList.remove("invalid")
+			document.getElementById("must"+index).classList.add("hide")
 			if(data.required === true){
-				if(data.type === '問答題' && data.answer.trim() === ""){
-					document.getElementById("q"+index).setAttribute("style", "border: 1px solid red")
+				if(data.type === '問答題' && data.answer.trim() === ""){					
+					warning(index)
+					validate = false
+				}else if(data.type === '多選題' && data.answer.length === 0 ){
+					warning(index)
 					validate = false
 				}else{
 					if(data.answer === ""){
-						document.getElementById("q"+index).setAttribute("style", "border: 1px solid red")
+						warning(index)
+						validate = false
+					}
+				}
+			}
+			if(data.required === true){
+				if(data.type === '問答題' && data.answer.trim() === ""){					
+					warning(index)
+					validate = false
+				}else if(data.type === '多選題' && data.answer.length === 0 ){
+					warning(index)
+					validate = false
+				}else{
+					if(data.answer === ""){
+						warning(index)
+						validate = false
+					}
+				}
+			}
+			if(data.required === true){
+				if(data.type === '問答題' && data.answer.trim() === ""){					
+					warning(index)
+					validate = false
+				}else if(data.type === '多選題' && data.answer.length === 0 ){
+					warning(index)
+					validate = false
+				}else{
+					if(data.answer === ""){
+						warning(index)
+						validate = false
+					}
+				}
+			}
+			if(data.required === true){
+				if(data.type === '問答題' && data.answer.trim() === ""){					
+					warning(index)
+					validate = false
+				}else if(data.type === '多選題' && data.answer.length === 0 ){
+					warning(index)
+					validate = false
+				}else{
+					if(data.answer === ""){
+						warning(index)
+						validate = false
+					}
+				}
+			}
+			if(data.required === true){
+				if(data.type === '問答題' && data.answer.trim() === ""){					
+					warning(index)
+					validate = false
+				}else if(data.type === '多選題' && data.answer.length === 0 ){
+					warning(index)
+					validate = false
+				}else{
+					if(data.answer === ""){
+						warning(index)
 						validate = false
 					}
 				}
@@ -81,6 +155,12 @@
 		})
 		return validate
 	}
+
+	function warning(index){
+		document.getElementById("q"+index).classList.add("invalid")
+		document.getElementById("must"+index).classList.remove("hide")
+	}
+
 	function convertAns(){
 		questions.forEach(data => {
 			if(!Array.isArray(data.answer)){
@@ -88,46 +168,56 @@
 			}
 		})
 	}
-	function onSignIn(googleUser){
-            var profile = googleUser.getBasicProfile();
-            console.log(user.get)
-            console.log("ID: " + profile.getId());
-            console.log("Email: " + profile.getEmail());
-        }
 </script>
-
 <style>
-
+	.container {
+		width: 980px;
+		margin: 0 auto;
+		background-color: rgba(255, 255, 255, 0.685);
+	}
+	#main {
+		display: flex;
+	}
 </style>
-<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-
-{#if template}
-	<div class="container">
-		<div class="alert">
-			<div class="form-title">{template.name}</div>
-			<div class="form-content">{template.description}</div>
-		</div>
-		<form action="" id="form">
-			<div class="form-body">
-			{#each template.questions as q, i}
-				<Question question="{q}" index="{i}" questions="{questions}"/>
-			{/each}
-			</div>
-			<div class="row-btn">
-				<div class="btn-send" on:click="{submit}">送出</div>
-			</div>		
-		</form>
-	</div>
-	<!-- 成功畫面-->
-	{#if success === true}
-		<div class="modal-success">
-			<div class="modal-body">
-				<div class="success-banner"></div>
-				<div class="success-text">送出成功</div>
-				<div class="success-content">我們已收到您的回饋</div>
-			</div>
-		</div>
+<svelte:head>
+	{#if template}
+		<title>{template.name}</title>
+	{:else}
+		<title>問卷</title>
 	{/if}
-{:else}
-	loading
-{/if}
+</svelte:head>
+
+<div id="main">
+	{#if template}
+		<div class="container">
+			<div class="alert">
+				<div class="form-title">{template.name}</div>
+				<div class="form-content">{template.description}</div>
+			</div>
+			<form action="" id="form">
+				<div class="form-body">
+				{#each template.questions as q, i}
+					<Question question="{q}" index="{i}" questions="{questions}"/>
+				{/each}
+				</div>
+				<div class="row-btn" style="margin-bottom:10px;">
+					<div class="btn-send" on:click="{submit}">送出</div>
+				</div>		
+			</form>
+		</div>
+		<!-- 成功畫面-->
+		{#if success === true}
+			<div class="modal-success">
+				<div class="modal-body">
+					<div class="success-banner"></div>
+					<div class="success-text">送出成功</div>
+					{#if template.finishMsg}
+						<div class="success-content">{template.finishMsg}</div>
+					{/if}
+				</div>
+			</div>
+		{/if}
+	{:else}
+		loading		
+	{/if}
+</div>

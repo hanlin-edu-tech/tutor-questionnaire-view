@@ -6,12 +6,20 @@
     // const dispatch = createEventDispatcher()
 </script>
 
+<style>
+	.warning {
+		border: 1px solid #F28121
+	}
+</style>
+
 {#if question.type === '單選題'}
 	<div class="form-group" id="q{index}">
-		<div class="form-topic">{index+1}. {question.topic}</div>
-		{#if question.required === true}
-			<div class="form-must">*請填寫這個欄位*</div>
-		{/if}
+		<div class="form-topic">{index+1}. {question.topic}
+			{#if question.required === true}
+				<span style="color: #F28121;">*</span>
+			{/if}	
+		</div>
+		<div class="form-must hide" id="must{index}">*請填寫這個欄位*</div>
 		<div class="form-item">
 			{#each question.options as o, j}
 				<div class="control">
@@ -23,13 +31,18 @@
 	</div>
 {:else if question.type === '多選題'}
 	<div class="form-group" id="q{index}">
-		<div class="form-topic">{index+1}. {question.topic}</div>
-		{#if question.required === true}
-			<div class="form-must">*請填寫這個欄位*</div>
-		{/if}						
-		<div class="multiple">
-			<div class="multiple-text">複選</div>
+		<div style="display:flex">
+			<div class="form-topic">{index+1}. {question.topic}
+				{#if question.required === true}
+					<span style="color: #F28121;">*</span>
+				{/if}			
+			</div>
+			
+			<div class="multiple">
+				<div class="multiple-text">複選</div>
+			</div>
 		</div>
+		<div class="form-must hide" id="must{index}">*請填寫這個欄位*</div>
 		<div class="form-item" id="multi{index}">
 			{#each question.options as o, j}
 				<div class="control">
@@ -41,10 +54,12 @@
 	</div>
 {:else}
 	<div class="form-group" id="q{index}">
-		<div class="form-topic">{index+1}. {question.topic}</div>
-		{#if question.required === true}
-			<div class="form-must">*請填寫這個欄位*</div>
-		{/if}
+		<div class="form-topic">{index+1}. {question.topic}
+			{#if question.required === true}
+				<span style="color: #F28121;">*</span>
+			{/if}						
+		</div>
+		<div class="form-must hide" id="must{index}">*請填寫這個欄位*</div>
 		<div class="form-item">			
             <textarea placeholder="請填入文字" name="qa{index}" data-subject-answer="500" bind:value="{questions[index].answer}"></textarea>
 		</div>

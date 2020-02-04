@@ -1,9 +1,11 @@
 .DS_Store
 */node_modules/*
-/back/src/node_modules/@sapper/internal/**
 yarn-error.log
 /cypress/screenshots/
 /back/__sapper__/**
 /back/cypress/**
-/back/src/node_modules/**
+back/src/node_modules
 telepresence.log
+.vscode
+dist
+node_modules
