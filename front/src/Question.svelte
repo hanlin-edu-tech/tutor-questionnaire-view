@@ -1,9 +1,7 @@
 <script>
     export let questions
     export let question
-	export let index
-    // import { createEventDispatcher } from 'svelte'
-    // const dispatch = createEventDispatcher()
+		export let index
 </script>
 
 <style>

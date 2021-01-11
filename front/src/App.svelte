@@ -1,164 +1,329 @@
 <script>
-	import {onMount} from 'svelte'
-	import Question from './Question.svelte'
-	let template
-	let questionnaire = {
-		started: null,
-		finished: null,
-		questions: [],
-		template: '',
-		finishMsg: '',
-		callBackUrl: ''
-	}
-	let questions = new Array()
-	let success
-	let callBackUrl
-	const questionId = window.location.search.substring(4,window.location.search.length)
-	onMount(async () => {
-		if(window.location.protocol === "http:"){
-			const path = window.location.href.split(":")[1]		
-			window.location.href = `https:${path}`
-		}
-		const host = window.location.hostname
-        let contextPath = ''
-		await fetch(`https://${host}${contextPath}/questionnaire/templates/${questionId}`)
-		.then(res => {
-			return res.json()
-		})
-		.then(data => {
-			questionnaire.started = new Date()
-			questionnaire.template = questionId
-			questionnaire.callBackUrl = data.callBackUrl
-			questionnaire.finishMsg = data.finishMsg
-			template = data
-			const count = data.questions.length
-			for(let i=0; i<count; i++){
-				questions.push({
-					"topic":data.questions[i].topic,
-					"answer":"",
-					"required":data.questions[i].required,
-					"type":data.questions[i].type,
-					"options":data.questions[i].options
-				})
-			}
-		})
-	});
-	function submit(){		
-		// console.log('questions: ', questionnaire.questions)
-		if(!validate()){
-			success = false
-			return false
-		}
-		questionnaire.finished = new Date()
-		questionnaire.questions = questions	
-		convertAns()
-		const host = window.location.hostname
-        let contextPath = ''
-		fetch(`https://${host}${contextPath}/questionnaire/questionnaire/create?templateId=${questionId}`,{
-			method: "post",
-			body: JSON.stringify(questionnaire),
-			headers: {
-				'content-type': 'application/json'
-			},
-			credentials: 'include'
-		})
-		.then(function(body){
-			if(body.ok){
-				success = true
-				if(questionnaire.callBackUrl.trim() !== ""){
-					setTimeout(()=>{window.location.href = questionnaire.callBackUrl}, 700)
-					
-				}
-			}
-		
-		})
-		
-	}
-	function validate(){
-		let validate = true
-		questions.forEach((data, index) => {
-			document.getElementById("q"+index).classList.remove("invalid")
-			document.getElementById("must"+index).classList.add("hide")
-			if(data.required === true){
-				if(data.type === '問答題' && data.answer.trim() === ""){					
-					warning(index)
-					validate = false
-				}else if(data.type === '多選題' && data.answer.length === 0 ){
-					warning(index)
-					validate = false
-				}else{
-					if(data.answer === ""){
-						warning(index)
-						validate = false
-					}
-				}
-			}
-		})
-		return validate
-	}
+  import { onMount } from "svelte";
+  import Question from "./Question.svelte";
 
-	function warning(index){
-		document.getElementById("q"+index).classList.add("invalid")
-		document.getElementById("must"+index).classList.remove("hide")
-	}
+  const localTemplate = {
+    _id: { $oid: "5dc28d2591416c00083d0250" },
+    author: "5b72414f11bc44000806503d",
+    name: "課後說一說",
+    description:
+      "課堂結束別急著下課喔！跟老師說說你這堂課的學習狀況，讓老師可以根據你的需求安排更加適合你的課程唷！",
+    questions: [
+      {
+        options: ["剛剛好", "太簡單", "太困難"],
+        required: true,
+        topic: "這堂課內容難度如何？",
+        type: "單選題"
+      },
+      {
+        options: ["很棒", "感覺普通", "不太喜歡"],
+        required: true,
+        topic: "上完課的感覺如何？",
+        type: "單選題"
+      },
+      {
+        required: true,
+        topic:
+          "簡短的告訴老師，今天課堂上有遇到什麼問題呢？未來希望課堂如何調整呢？",
+        type: "問答題"
+      }
+    ],
+    enabled: true,
+    callBackUrl: "",
+    finishMsg: "感謝您的回饋！",
+    extraInfo: "",
+    createDate: { $date: 1573031205335 }
+  };
 
-	function convertAns(){
-		questions.forEach(data => {
-			if(!Array.isArray(data.answer)){
-				data.answer = [data.answer]
-			}
-		})
-	}
+  const localQuestionnaire = {
+    _id: {
+      $oid: "5ff3c5fd7246530007ebe4da"
+    },
+    template: "5e5dd54f9137c300076372ae",
+    name: "老師教學回饋",
+    description:
+      "聽完老師的互動指導課程後，說說你的感想吧！ 老師會透過你的回饋調整更適合你的課程內容與指導方式唷！",
+    questions: [
+      {
+        answer: ["還不錯"],
+        options: ["非常棒", "還不錯", "還好", "不喜歡"],
+        required: true,
+        topic: "上完這堂互動指導課程感覺如何？",
+        type: "單選題"
+      },
+      {
+        answer: ["平易近人"],
+        options: ["生動有趣", "平易近人", "略嫌單調", "枯燥乏味"],
+        required: true,
+        topic: "老師的指導風格讓你覺得？",
+        type: "單選題"
+      },
+      {
+        answer: ["大多能夠吸收理解"],
+        options: [
+          "講解清晰、容易理解",
+          "大多能夠吸收理解",
+          "僅少部分聽得懂",
+          "完全無法吸收"
+        ],
+        required: true,
+        topic: "對於老師的課程指導與問題講解，你覺得？",
+        type: "單選題"
+      },
+      {
+        answer: ["有不少提升", "非常有幫助"],
+        options: [
+          "非常有幫助",
+          "有不少提升",
+          "稍微改善了學習狀況",
+          "沒有太多效果"
+        ],
+        required: true,
+        topic: "整體而言對你課業學習上是否有幫助呢？",
+        type: "多選題"
+      },
+      {
+        answer: ["123"],
+        required: true,
+        topic: "除了上述的問題外，還有什麼話想跟老師說呢？",
+        type: "問答題"
+      }
+    ],
+    user: "5b72414f11bc44000806503d",
+    email: "wumi@ehanlin.com.tw",
+    started: {
+      $date: 1609811446289
+    },
+    finished: {
+      $date: 1609811453649
+    },
+    extraInfo: ""
+  };
+
+  let template;
+  let questionnaireView;
+  const questionnaire = {
+    started: null,
+    finished: null,
+    questions: [],
+    template: "",
+    finishMsg: "",
+    callBackUrl: ""
+  };
+  let questions = new Array();
+  let success;
+  let callBackUrl;
+  let templateId;
+  let title;
+
+	const host = window.location.hostname;
+  const params = new URL(document.location).searchParams;
+  const id = params.get("id");
+	const isView = params.get("view") === "true";
+
+  onMount(async () => {
+    if (host === "localhost") {
+      if (isView) {
+        questionnaireView = localQuestionnaire;
+        title = questionnaireView.name;
+      } else {
+        mapTemplateInfoToQuestionnaire(localTemplate);
+        title = localTemplate.name;
+      }
+    } else {
+      if (isView) {
+				questionnaireView = await getUserQuestionnaire(id)
+      } else {
+        templateId = id;
+        template = await getTemplate(templateId);
+        mapTemplateInfoToQuestionnaire(template);
+        title = template.name;
+      }
+    }
+  });
+
+  async function getUserQuestionnaire(questionnaireId) {
+    const res = await fetch(
+      `https://${host}/questionnaire/questionnaires/${questionnaireId}`
+    ).catch(err => {
+      console.error(err);
+      alert("發生錯誤，請稍後再試");
+    });
+    if (res.ok) {
+      return await res.json();
+    } else {
+      alert("發生錯誤，請稍後再試");
+    }
+  }
+
+  async function getTemplate(templateId) {
+    const res = await fetch(
+      `https://${host}/questionnaire/templates/${templateId}`
+    ).catch(err => {
+      console.error(err);
+      alert("發生錯誤，請稍後再試");
+    });
+    if (res.ok) {
+      return await res.json();
+    } else {
+      alert("發生錯誤，請稍後再試");
+    }
+  }
+
+  function mapTemplateInfoToQuestionnaire(templateInfo) {
+    questionnaire.started = new Date();
+    questionnaire.template = templateId;
+    questionnaire.callBackUrl = templateInfo.callBackUrl;
+    questionnaire.finishMsg = templateInfo.finishMsg;
+    template = templateInfo;
+    const count = templateInfo.questions.length;
+    for (let i = 0; i < count; i++) {
+      questions.push({
+        topic: templateInfo.questions[i].topic,
+        answer: "",
+        required: templateInfo.questions[i].required,
+        type: templateInfo.questions[i].type,
+        options: templateInfo.questions[i].options
+      });
+    }
+  }
+
+  function submit() {
+    if (!validate()) {
+      success = false;
+      return false;
+    }
+    questionnaire.finished = new Date();
+    questionnaire.questions = questions;
+    convertAns();
+    const host = window.location.hostname;
+    let contextPath = "";
+    fetch(
+      `https://${host}${contextPath}/questionnaire/questionnaire/create?templateId=${templateId}`,
+      {
+        method: "post",
+        body: JSON.stringify(questionnaire),
+        headers: {
+          "content-type": "application/json"
+        },
+        credentials: "include"
+      }
+    ).then(function(body) {
+      if (body.ok) {
+        success = true;
+        if (questionnaire.callBackUrl.trim() !== "") {
+          setTimeout(() => {
+            window.location.href = questionnaire.callBackUrl;
+          }, 700);
+        }
+      }
+    });
+  }
+  function validate() {
+    let validate = true;
+    questions.forEach((data, index) => {
+      document.getElementById("q" + index).classList.remove("invalid");
+      document.getElementById("must" + index).classList.add("hide");
+      if (data.required === true) {
+        if (data.type === "問答題" && data.answer.trim() === "") {
+          warning(index);
+          validate = false;
+        } else if (data.type === "多選題" && data.answer.length === 0) {
+          warning(index);
+          validate = false;
+        } else {
+          if (data.answer === "") {
+            warning(index);
+            validate = false;
+          }
+        }
+      }
+    });
+    return validate;
+  }
+
+  function warning(index) {
+    document.getElementById("q" + index).classList.add("invalid");
+    document.getElementById("must" + index).classList.remove("hide");
+  }
+
+  function convertAns() {
+    questions.forEach(data => {
+      if (!Array.isArray(data.answer)) {
+        data.answer = [data.answer];
+      }
+    });
+  }
 </script>
+
 <style>
-	.container {
-		width: 980px;
-		margin: 0 auto;
-		background-color: rgba(255, 255, 255, 0.685);
-	}
-	#main {
-		display: flex;
-	}
+  .container {
+    width: 980px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.685);
+  }
+  #main {
+    display: flex;
+  }
 </style>
+
 <svelte:head>
-	{#if template}
-		<title>{template.name}</title>
-	{:else}
-		<title>問卷</title>
-	{/if}
+  {#if title}
+    <title>{title}</title>
+  {:else}
+    <title>問卷</title>
+  {/if}
 </svelte:head>
 
 <div id="main">
-	{#if template}
-		<div class="container">
-			<div class="alert">
-				<div class="form-title">{template.name}</div>
-				<div class="form-content">{template.description}</div>
-			</div>
-			<form action="" id="form">
-				<div class="form-body">
-				{#each template.questions as q, i}
-					<Question question="{q}" index="{i}" questions="{questions}"/>
-				{/each}
-				</div>
-				<div class="row-btn" style="margin-bottom:10px;">
-					<div class="btn-send" on:click="{submit}">送出</div>
-				</div>		
-			</form>
-		</div>
-		<!-- 成功畫面-->
-		{#if success === true}
-			<div class="modal-success">
-				<div class="modal-body">
-					<div class="success-banner"></div>
-					<div class="success-text">送出成功</div>
-					{#if template.finishMsg}
-						<div class="success-content">{template.finishMsg}</div>
-					{/if}
-				</div>
-			</div>
-		{/if}
-	{:else}
-		loading		
-	{/if}
+  {#if questionnaireView}
+    <div class="container">
+      <div class="alert">
+        <div class="form-title">{questionnaireView.name}</div>
+        <div class="form-content">{questionnaireView.description}</div>
+      </div>
+      <form action="" id="form">
+        <div class="form-body">
+          {#each questionnaireView.questions as q, i}
+            <div class="form-group">
+              <div class="form-item">
+                <div class="form-topic">{q.topic}</div>
+                {q.answer}
+              </div>
+            </div>
+          {/each}
+        </div>
+      </form>
+    </div>
+  {/if}
+  {#if template}
+    <div class="container">
+      <div class="alert">
+        <div class="form-title">{template.name}</div>
+        <div class="form-content">{template.description}</div>
+      </div>
+      <form action="" id="form">
+        <div class="form-body">
+          {#each template.questions as q, i}
+            <Question question={q} index={i} {questions} />
+          {/each}
+        </div>
+        <div class="row-btn" style="margin-bottom:10px;">
+          <div class="btn-send" on:click={submit}>送出</div>
+        </div>
+      </form>
+    </div>
+  {/if}
+  <!-- 成功畫面-->
+  {#if success === true}
+    <div class="modal-success">
+      <div class="modal-body">
+        <div class="success-banner" />
+        <div class="success-text">送出成功</div>
+        {#if template.finishMsg}
+          <div class="success-content">{template.finishMsg}</div>
+        {/if}
+      </div>
+    </div>
+  {/if}
 </div>
