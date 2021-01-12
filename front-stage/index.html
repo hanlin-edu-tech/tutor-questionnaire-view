@@ -6,8 +6,6 @@
 	<title>問卷</title>
 
 	<link rel='icon' type='image/png' href='./favicon.png'>
-	<link rel='stylesheet' href='./global.css'>
-	<link rel='stylesheet' href='./bundle.css'>
 	<link rel='stylesheet' href='./css/style.css'>
 	<link rel="stylesheet" href="./css/lib/flaticon.css">
 	<link rel="stylesheet" href="/coach-web/css/ecoach-widget.css">
@@ -17,11 +15,37 @@
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	<script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-firestore.js"></script>
-	<script defer src='./bundle.js'></script>
+  <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-firestore.js"></script>
 	<script src='/coach-web/widget.js'></script>
 </head>
-
 <body>
+		<div class="container">
+			<div class="alert">
+				<div class="form-title" id="name"></div>
+				<div class="form-content" id="description"></div>
+			</div>
+			<form action="" id="form">
+				<div class="form-body" id="content">
+		
+				</div>
+				<div class="row-btn" style="margin-bottom:10px;">
+					<div class="btn-send">送出</div>
+				</div>
+			</form>
+		</div>
+	
+		<!-- 成功畫面-->
+	
+		<div class="modal-success hide">
+			<div class="modal-body">
+				<div class="success-banner"></div>
+				<div class="success-text">送出成功</div>		
+				<div class="success-content"></div>						
+			</div>
+		</div>
+		
+	</div>
+	<script src='./js/questionnaire.js'></script>
+	<script src='./js/main.js'></script>
 </body>
 </html>

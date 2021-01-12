@@ -13,7 +13,7 @@ const keyFileNameProd = "tutor.json";
 
 const projectName = "app/survey";
 
-const distDir = `${__dirname}/public/`;
+const distDir = `${__dirname}/`;
 
 const gcsOptionTest = {
     projectId: projectIdTest,
@@ -30,7 +30,6 @@ const gcsOptionProd = {
 };
 
 async function uploadToGCS(gcsOption) {
-    console.log(distDir)
     const storage = new Storage({
         projectId: gcsOption.projectId,
         keyFileName: "tutor-test.json"
@@ -65,11 +64,13 @@ async function findUploadFullPaths(dir, uploadFullPaths = []) {
     for (let file of files) {
         const fullPath = path.join(dir, file);
         const status = await fs.statSync(fullPath);
-        if (status.isDirectory()) {
-            uploadFullPaths = await findUploadFullPaths(fullPath, uploadFullPaths);
-        } else {
-            uploadFullPaths.push(fullPath);
-        }
+        if(!fullPath.match("node_modules")){
+            if (status.isDirectory()) {
+                uploadFullPaths = await findUploadFullPaths(fullPath, uploadFullPaths);
+            } else {
+                uploadFullPaths.push(fullPath);
+            }     
+        }       
     }
     return uploadFullPaths;
 }
