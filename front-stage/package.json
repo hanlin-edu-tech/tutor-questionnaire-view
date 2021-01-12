@@ -1,0 +1,27 @@
+{
+  "name": "front-stage",
+  "version": "1.0.0",
+  "description": "eHanlin Questionnaire App Front Stage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fluxion@ehanlin.com.tw",
+  "license": "ISC",
+  "jshintConfig": {
+    "esversion": 8,
+    "devel": true,
+    "undef": true,
+    "globals": {
+      "openModal": true
+    },
+    "browser": true,
+    "eqeqeq": true
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^5.7.2",
+    "fs": "0.0.1-security",
+    "gulp": "^4.0.2",
+    "path": "^0.12.7"
+  }
+}

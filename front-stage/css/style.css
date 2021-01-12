@@ -13,6 +13,12 @@ body {
   background-size: 510px 510px;
 }
 
+.container {
+  width: 980px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.685);
+}
+
 .alert {
   padding: 20px 30px;
   background-color: #0D6CBE;
