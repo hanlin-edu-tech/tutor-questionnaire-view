@@ -1,9 +1,9 @@
-let type = "";
-const perPage = 25;
-const paginationStep = 10;
-let totalPages = 0;
-let totalItems = 0;
-let items = {};
+var type = "";
+var perPage = 25;
+var paginationStep = 10;
+var totalPages = 0;
+var totalItems = 0;
+var items = {};
 
 function initValue(itemList, pageType) {
   totalItems = itemList.length;

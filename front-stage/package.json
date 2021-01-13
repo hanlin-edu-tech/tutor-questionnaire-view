@@ -2,7 +2,10 @@
   "name": "front-stage",
   "version": "1.0.0",
   "description": "eHanlin Questionnaire App Front Stage",
-  "main": "index.js",
+  "main": "main.js",
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

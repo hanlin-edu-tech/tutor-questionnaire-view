@@ -190,16 +190,16 @@
   const host = window.location.hostname;
   window.eHanlin.dataprovider.template = {
     getTemplates: (() => {
-      return host === 'localhost' ? localTemplates() : wwwTemplates();
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localTemplates() : wwwTemplates();
     }),
     getTemplate: ((id) => {
-      return host === 'localhost' ? localTemplate() : wwwTemplate(id);
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localTemplate() : wwwTemplate(id);
     }),
     getQuestionnaires: (() => {
-      return host === 'localhost' ? localQuestionnaires() : wwwQuestionnaires();
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnaires() : wwwQuestionnaires();
     }),
     getQuestionnaire: ((id) => {
-      return host === 'localhost' ? localQuestionnaire() : wwwQuestionnaire(id);
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnaire() : wwwQuestionnaire(id);
     }),
   };
 })();
