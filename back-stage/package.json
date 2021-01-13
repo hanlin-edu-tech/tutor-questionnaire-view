@@ -1,8 +1,7 @@
 {
-  "name": "front-stage",
+  "name": "back-stage",
   "version": "1.0.0",
-  "description": "eHanlin Questionnaire App Front Stage",
-  "main": "main.js",
+  "description": "eHanlin Questionnaire App Back Stage",
   "engines": {
     "node": ">=12.0.0"
   },
@@ -23,8 +22,13 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^5.7.2",
+    "event-stream": "^4.0.1",
     "fs": "0.0.1-security",
     "gulp": "^4.0.2",
-    "path": "^0.12.7"
+    "gulp-connect": "^5.7.0",
+    "gulp-rename": "^2.0.0",
+    "path": "^0.12.7",
+    "pug": "^3.0.0",
+    "rename": "^1.0.4"
   }
 }

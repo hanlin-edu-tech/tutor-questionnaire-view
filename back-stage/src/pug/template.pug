@@ -1,0 +1,101 @@
+doctype html
+html(lang='tw')
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(charset='UTF-8')
+        meta(http-equiv='X-UA-Compatible', content='ie=edge')
+        meta(http-equiv='cache-control', content='no-cache')
+        meta(http-equiv='pragma', content='no-cache')
+        meta(http-equiv='expires', content='0')
+        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet")
+        title
+
+    body
+      #app.container
+            table.table.table-striped.table-bordered
+                tr
+                    td.table-info(width='150') 樣板名稱
+                    td(data-field = "name") 
+                tr
+                    td.table-info(width='150') 樣板連結
+                        span.badge.badge-info#copy(style="cursor:pointer") copy
+                    td#url 
+                tr
+                    td.table-info 創建日期
+                    td(data-field = "createDate") 
+                tr
+                    td.table-info 樣板作者
+                    td(data-field = "author")
+                tr                       
+                    td.table-info 前導訊息
+                    td(data-field = "description") 
+                tr
+                    td.table-info 結束訊息
+                    td(data-field = "finishMsg") 
+                tr
+                    td.table-info Call Back URL
+                    td(data-field = "callBackUrl") 
+                tr
+                    td.table-info 其他
+                    td(data-field="extraInfo") 
+            table.table.table-striped.table-bordered#questionList
+                tr
+                    td.table-info 題目
+                    td.table-info(width='80') 類型
+                    td.table-info 選項
+                    td.table-info(width='80') 必填             
+    script(src="./js/dataprovider/template.js")
+    script.
+      (() => {
+      const search = (new URL(window.location)).searchParams;
+      const templateId = search.get('id');
+
+      async function init(){
+      const template = await window.eHanlin.dataprovider.template.getTemplate(templateId)
+      composeFields(template);
+      composeQuestions(template.questions);
+      }
+
+      function composeFields(template){
+      document.querySelectorAll('[data-field]').forEach(it => {
+      const field = it.dataset.field
+      if(field === 'createDate'){
+      it.innerText = Intl.DateTimeFormat('zh-TW').format(new Date(template[field]))
+      }else{
+      it.innerText = template[field]; 
+      }          
+      })
+      document.querySelector('#url').innerText = `https://${window.location.host}/app/survey/index.html?id=${templateId}`;
+      document.querySelector('#copy').addEventListener('click', copyLink);
+      }
+      
+      function copyLink(){
+      const link = document.getElementById('url')
+      const range = document.createRange();
+      range.selectNodeContents(link);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand('copy')
+      }
+
+      function composeQuestions(questions){
+      const questionList = document.querySelector('#questionList');
+      questions.forEach((it, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = questionTemplate(it, idx);
+      questionList.append(tr);
+      })
+      }
+
+      const questionTemplate = (question, idx) => {
+      return `
+      <td>${idx + 1}. ${question.topic}</td>
+      <td>${question.type}</td>
+      <td>${question.options ? question.options : '無'}</td>
+      <td>${question.required ? '是' : '否'}</td>
+      `;
+      }
+      
+      init();
+      })();
