@@ -170,6 +170,31 @@
     return await res.json();    
   };
 
+  const localSubmit = () => {
+
+  };
+
+  const submit = async (template) => {
+    template.enabled = true;
+    const res = await fetch(`https://${host}/questionnaire/templates/create`,
+					{			
+					method:'post',
+					headers: {
+						'Content-Type':'application/json; charset=utf-8'
+					},
+					body: JSON.stringify(template)			
+					}).catch(err => {
+            console.error(err);
+          });
+    if(res.ok){
+      window.setTimeout(()=>{window.location.href="./templateList.html";},500);
+    }
+    if(res.type === 'cors' && res.status === 403){
+      alert('請先登入');
+      window.location.href="./index.html";
+  }
+  };
+
   const wwwQuestionnaire = async (id) => {
     const res = await fetch(`https://${host}/questionnaire/questionnaires/${id}`)
     .catch(err => {
@@ -188,7 +213,7 @@
   }
 
   const host = window.location.hostname;
-  window.eHanlin.dataprovider.template = {
+  window.eHanlin.dataprovider.questionnaire = {
     getTemplates: (() => {
       return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localTemplates() : wwwTemplates();
     }),
@@ -201,5 +226,8 @@
     getQuestionnaire: ((id) => {
       return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnaire() : wwwQuestionnaire(id);
     }),
+    submitTemplate: ((template) => {
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localSubmit() : submit(template);
+    })
   };
 })();

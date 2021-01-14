@@ -33,7 +33,7 @@ html(lang='tw')
       const questionnaireId = search.get('id');
 
       async function init(){
-      const questionnaire = await window.eHanlin.dataprovider.template.getQuestionnaire(questionnaireId)
+      const questionnaire = await window.eHanlin.dataprovider.questionnaire.getQuestionnaire(questionnaireId)
       composeFields(questionnaire);
       }
 

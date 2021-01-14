@@ -51,7 +51,7 @@ html(lang='tw')
       const templateId = search.get('id');
 
       async function init(){
-      const template = await window.eHanlin.dataprovider.template.getTemplate(templateId)
+      const template = await window.eHanlin.dataprovider.questionnaire.getTemplate(templateId)
       composeFields(template);
       composeQuestions(template.questions);
       }

@@ -31,10 +31,10 @@ html(lang='tw')
             async function init(){
             if(type === 'template'){
                 document.querySelector('.author').innerText = '問卷作者';
-                items = await window.eHanlin.dataprovider.template.getTemplates();
+                items = await window.eHanlin.dataprovider.questionnaire.getTemplates();
             }else{
                 document.querySelector('.author').innerText = '填寫者';
-                items = await window.eHanlin.dataprovider.template.getQuestionnaires();
+                items = await window.eHanlin.dataprovider.questionnaire.getQuestionnaires();
             }            
             let totalItems = items.length;
             initValue(items, type);

@@ -144,7 +144,7 @@ async function watchFiles() {
 async function connectLiveServer() {
     connect.server({
         root: distDir,
-        port: 9000,
+        port: 8080,
         livereload: true
     });
 }
