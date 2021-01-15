@@ -17,14 +17,15 @@ jobs:
 
     steps:
         - uses: actions/checkout@v2
-        - name: Use Node.js ${{ matrix.node-version }}
+        - name: Front Stage Use Node.js ${{ matrix.node-version }}
           uses: actions/setup-node@v1
+          working-directory: ./front-stage
+          with:
+              node-version: ${{ matrix.node-version }}          
+          run: echo -n '${{ secrets.GCS_TUTOR_TEST }}' > tutor.json && npm install && npm run uploadGcsProd
+        - name: Back Stage Use Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v1
+          working-directory: ./back-stage
           with:
               node-version: ${{ matrix.node-version }}
-        - run: echo -n '${{ secrets.GCS_TUTOR }}' > tutor.json
-        - run: cd front-stage
-        - run: npm install      
-        - run: npm run uploadGcsProd
-        - run: cd ../back-stage
-        - run: npm install
-        - run: npm run uploadGcsProd    
+          run: echo -n '${{ secrets.GCS_TUTOR_TEST }}' > tutor.json && npm install && npm run uploadGcsProd
