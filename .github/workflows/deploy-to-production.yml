@@ -21,7 +21,8 @@ jobs:
           uses: actions/setup-node@v1
           with:
               node-version: ${{ matrix.node-version }}
-        - run: echo -n '${{ secrets.GCS_TUTOR }}' > tutor.json
+        - run: echo -n '${{ secrets.GCS_TUTOR }}' > ./front-stage/tutor.json
+        - run: echo -n '${{ secrets.GCS_TUTOR }}' > ./back-stage/tutor.json
         - name: Deploy Front Stage        
           working-directory: ./front-stage          
           run: npm install && npm run uploadGcsProd
