@@ -51,6 +51,9 @@ html(lang='tw')
             color:grey;
             height:38px;
         }
+        .hide {
+            display: none;
+        }
     body
         nav-bar(current="create")
         .container#app.mt-3
@@ -86,10 +89,11 @@ html(lang='tw')
                     label(for='extraInfo') 其他
                     textarea#extraInfo.form-control(rows="3" data-field="extraInfo")
                 div#submit.btn.btn-primary 送出
-        //- .modal-success.hide
-        //-     .modal-body
-        //-         .success-banner
-        //-         .success-text 送出成功
+        .modal-success.hide
+            .modal-body
+                .success-banner
+                .success-text 送出成功
+        script(src="./js/dataprovider/questionnaire.js")
         script(src="./js/navbar.js")
         script(src="./js/create.js")
         script(src="./js/question.js")
