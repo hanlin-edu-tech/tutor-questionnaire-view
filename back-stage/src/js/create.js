@@ -99,13 +99,13 @@
         errMsg += '題目不得為空 \n';
       }
       if (q.type === '單選題' && q.options.length <= 1) {
-        if (errMsg.indexOf('單選題至少要有一個以上的選項 \n') === -1) {
-          errMsg += '單選題至少要有一個以上的選項 \n';
+        if (errMsg.indexOf('單選題至少要有兩個以上的選項 \n') === -1) {
+          errMsg += '單選題至少要有兩個以上的選項 \n';
         }
       }
       if (q.type === '多選題' && q.options.length <= 2) {
-        if (errMsg.indexOf('多選題至少要有二個以上的選項 \n') === -1) {
-          errMsg += '多選題至少要有二個以上的選項 \n';
+        if (errMsg.indexOf('多選題至少要有三個以上的選項 \n') === -1) {
+          errMsg += '多選題至少要有三個以上的選項 \n';
         }
       }
       if (q.options) {
