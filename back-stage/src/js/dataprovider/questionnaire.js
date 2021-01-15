@@ -1,7 +1,6 @@
 (() => {
-  const localTemplates = () => {
+  const localTemplates = async () => {
     const list = [];
-
     for (var i = 0; i < 1200; i++) {
       list.push({
         "author": "5c2c78a3ff5b3f000173bae5",
@@ -11,13 +10,13 @@
         "id": "5db2691f1a80720007936b01"
       });
     }
-
-    return list;
-
+    return new Promise((resolve, reject) => {
+      window.setTimeout(()=> resolve(list), 300);
+    });
   };
 
-  const localTemplate = () => {
-    return {
+  const localTemplate = async () => {
+    const template = {
       "_id" : {
         "timestamp" : 1568195526,
         "counter" : 16072893,
@@ -52,6 +51,9 @@
       "createDate" : 1568195526116,
       "id" : "5d78c3c693c2c20ed3f540bd"
     };
+    return new Promise((resolve, reject) => {
+      window.setTimeout(()=> resolve(template), 300);
+    });
   };
 
   const wwwTemplates = async () => {
@@ -72,7 +74,7 @@
     return await res.json();    
   };
 
-  const localQuestionnaires = () => {
+  const localQuestionnaires = async () => {
     const list = [];
     for (var i = 0; i < 1200; i++) {
       list.push({
@@ -111,15 +113,16 @@
         "started": 1610503579105,
         "finished": 1610503590195,
         "extraInfo": "",
-        "id": "5ffe55a6a0e12500067b2093"
+        "id": "5ffe55a6a0e12300067b2093"
       });
     }
-
-    return list;
+    return new Promise((resolve, reject) => {
+      window.setTimeout(()=> resolve(list), 300);
+    });   
   };
 
   const localQuestionnaire = () => {
-    return {
+    const questionnaire = {
       "_id": {
         "timestamp": 1610464993,
         "machineIdentifier": 10543397,
@@ -157,8 +160,11 @@
       "started": 1610503579105,
       "finished": 1610503590195,
       "extraInfo": "",
-      "id": "5ffe55a6a0e12500067b2093"
+      "id": "5ffe55a6a0e12300067b2093"
     };
+    return new Promise((resolve, reject) => {
+      window.setTimeout(()=> resolve(questionnaire), 300);
+    });
   };
 
   const wwwQuestionnaires = async () => {
@@ -179,8 +185,8 @@
     return await res.json();    
   };
 
-  const localSubmit = () => {
-
+  const localSubmit = async () => {
+    window.setTimeout(()=>{ return true; },300);
   };
 
   const submit = async (template) => {
@@ -194,14 +200,13 @@
 					body: JSON.stringify(template)			
 					}).catch(err => {
             console.error(err);
+            return false;
           });
-    if(res.ok){
-      window.setTimeout(()=>{window.location.href="./templateList.html";},500);
-    }
     if(res.type === 'cors' && res.status === 403){
       alert('請先登入');
       window.location.href="./index.html";
-  }
+    }
+    return res.ok ? true : false;
   };
 
   if (window.eHanlin === undefined || window.eHanlin === null) {

@@ -9,7 +9,7 @@ html(lang='tw')
         meta(http-equiv='expires', content='0')
         link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet")
         title 樣板列表
-    body
+    body    
         #app.container
             p
             ul.list-group  
@@ -21,26 +21,31 @@ html(lang='tw')
             p
             nav
                 ul.pagination.justify-content-center
-        script(src="./js/dataprovider/template.js")                            
+        script(src="./js/navbar.js")     
+        script(src="./js/dataprovider/questionnaire.js")
         script(src="./js/pagination.js")
-        script.
+        script. 
             (() => {
             let items = [];
             const search = (new URL(window.location)).searchParams
-            const type = search.get('type');        
+            const type = search.get('type');       
             async function init(){
-            if(type === 'template'){
+            const navbar = document.createElement('nav-bar');
+            navbar.setAttribute('current', type);
+            document.querySelector('body').insertBefore(navbar, document.querySelector('#app'))
+            if(type === 'template'){            
+                document.querySelector('title').innerText = '樣板列表';                
                 document.querySelector('.author').innerText = '問卷作者';
-
                 items = await window.eHanlin.dataprovider.questionnaire.getTemplates();
             }else{
-                document.querySelector('.author').innerText = '填寫者';
+                document.querySelector('title').innerText = '問卷列表';            
+                document.querySelector('.author').innerText = '填寫者'; 
                 items = await window.eHanlin.dataprovider.questionnaire.getQuestionnaires();
-            }            
+            }
             let totalItems = items.length;
             initValue(items, type);
-            addPageItems(1, items);
-            createPagination(0);
+            addPageItems();
+            createPagination();
             }
             init();
-            })();
+            })();    
