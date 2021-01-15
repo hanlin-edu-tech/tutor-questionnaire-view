@@ -11,8 +11,7 @@
 
   function onClickSubmitHandler() {
     document.querySelector('#submit').addEventListener('click', () => {
-      const template = getFormInputValues();
-      console.log(template);
+      const template = getFormInputValues();      
       const isValid = validate(template);
       if(isValid){
         const success = window.eHanlin.dataprovider.questionnaire.submitTemplate(template);
@@ -63,16 +62,17 @@
   function validate(template) {
     let errMsg = '';
     const {name, description, finishMsg} = template;
-    name ? toggleInvalid('name', true) : toggleInvalid('name', false);
-    description ? toggleInvalid('description', true) : toggleInvalid('description', false);
-    finishMsg ? toggleInvalid('finishMsg', true) : toggleInvalid('finishMsg', false);
+    const nameValid = name ? toggleInvalid('name', true) : toggleInvalid('name', false);
+    const descriptionValid = description ? toggleInvalid('description', true) : toggleInvalid('description', false);
+    const finishMsgValid = finishMsg ? toggleInvalid('finishMsg', true) : toggleInvalid('finishMsg', false);
+    
     errMsg += validateQuestions(template.questions);
     if (errMsg) {
       toggleErrorMessage(errMsg, true);
     }else{
       toggleErrorMessage(errMsg, false);
     }
-    return !errMsg;
+    return !errMsg && (nameValid && (descriptionValid && finishMsgValid));
   }
 
   function toggleInvalid(fieldName, valid){
@@ -81,7 +81,7 @@
     }else{
       document.querySelector(`[data-field="${fieldName}"]`).classList.add('is-invalid');
     }
-    
+    return valid;
   }
 
   function toggleErrorMessage(errMsg, show) {
@@ -117,7 +117,7 @@
           }
         });
         const duplicate = q.options.filter((item, index) => q.options.indexOf(item) !== index);
-        if(duplicate && errMsg.indexOf('選項不得為空 \n') === -1){
+        if(duplicate.length > 0 && errMsg.indexOf('選項不得重複 \n') === -1){
           errMsg += '選項不得重複 \n';
         }
       }
