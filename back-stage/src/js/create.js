@@ -116,10 +116,11 @@
             }
           }
         });
+        const duplicate = q.options.filter((item, index) => q.options.indexOf(item) !== index);
+        if(duplicate && errMsg.indexOf('選項不得為空 \n') === -1){
+          errMsg += '選項不得重複 \n';
+        }
       }
-      if (document.getElementsByClassName("duplicateOption").length !== 0) {
-        errMsg += "選項重複 \n";
-      }      
     });
     return errMsg;
   }
