@@ -21,8 +21,8 @@ html(lang='tw')
             p
             nav
                 ul.pagination.justify-content-center
-        script(src="./js/dataprovider/template.js")                            
         script(src="./js/navbar.js")     
+        script(src="./js/dataprovider/questionnaire.js")
         script(src="./js/pagination.js")
         script. 
             (() => {
@@ -44,8 +44,8 @@ html(lang='tw')
             }
             let totalItems = items.length;
             initValue(items, type);
-            addPageItems(1, items);
-            createPagination(0);
+            addPageItems();
+            createPagination();
             }
             init();
-            })();
+            })();    

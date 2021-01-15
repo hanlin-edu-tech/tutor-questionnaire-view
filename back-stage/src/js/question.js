@@ -49,18 +49,11 @@
     `;
   };
   customElements.define('a-question', class extends HTMLElement {
-    static get observedAttributes() {
-      console.log('observedAttributes');// NO 'this' / Element here!
-      return ["index"];
-    }
-
-
     connectedCallback() {
       const questionIndex = this.getAttribute('index');
       this.shadowRoot.querySelector('#delete-question').addEventListener('click', () => {
         document.querySelector(`#q${questionIndex}`).remove();
       });
-
     }
 
     constructor() {

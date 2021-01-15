@@ -16,19 +16,19 @@ html(lang='tw')
             table.table.table-striped.table-bordered
                 tr
                     td.table-info(width="150") 樣板名稱 
-                    td(data-field="name") {{questionnaire.name}}
+                    td(data-field="name")
                 tr
                     td.table-info 填寫日期
-                    td(data-field="finished") {{ questionnaire.started.$date|moment }}
+                    td(data-field="finished") 
                 tr
                     td.table-info 填寫人
-                    td(data-field="email") {{ questionnaire.email }}
+                    td(data-field="email")
             table.table.table-striped.table-bordered#questionList
                 tr
                     td.table-info(width="600") 題目
                     td.table-info 回答
-    script(src="./js/dataprovider/template.js")
     script(src="./js/navbar.js")
+    script(src="./js/dataprovider/questionnaire.js")
     script.
       (() => {
       const search = (new URL(window.location)).searchParams;
