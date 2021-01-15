@@ -52,7 +52,8 @@ html(lang='tw')
             height:38px;
         }
     body
-        .container#app
+        nav-bar(current="create")
+        .container#app.mt-3
             form#form
                 .form-group
                     label(for='name') 問卷名稱
@@ -89,6 +90,7 @@ html(lang='tw')
         //-     .modal-body
         //-         .success-banner
         //-         .success-text 送出成功
+        script(src="./js/navbar.js")
         script(src="./js/create.js")
         script(src="./js/question.js")
         script(type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js")

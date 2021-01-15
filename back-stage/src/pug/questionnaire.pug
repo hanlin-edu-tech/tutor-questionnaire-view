@@ -11,7 +11,8 @@ html(lang='tw')
         title
 
     body
-      #app.container
+        nav-bar(current="questionnaire")
+        #app.container.mt-3
             table.table.table-striped.table-bordered
                 tr
                     td.table-info(width="150") 樣板名稱 
@@ -27,6 +28,7 @@ html(lang='tw')
                     td.table-info(width="600") 題目
                     td.table-info 回答
     script(src="./js/dataprovider/template.js")
+    script(src="./js/navbar.js")
     script.
       (() => {
       const search = (new URL(window.location)).searchParams;

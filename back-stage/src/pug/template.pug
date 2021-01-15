@@ -11,7 +11,8 @@ html(lang='tw')
         title
 
     body
-      #app.container
+        nav-bar(current="template")        
+        #app.container.mt-3
             table.table.table-striped.table-bordered
                 tr
                     td.table-info(width='150') 樣板名稱
@@ -45,6 +46,7 @@ html(lang='tw')
                     td.table-info 選項
                     td.table-info(width='80') 必填             
     script(src="./js/dataprovider/template.js")
+    script(src="./js/navbar.js")
     script.
       (() => {
       const search = (new URL(window.location)).searchParams;
