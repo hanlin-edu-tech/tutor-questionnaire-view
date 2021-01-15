@@ -25,7 +25,6 @@ jobs:
         - run: cd front-stage
         - run: npm install      
         - run: npm run uploadGcsTest
-        - run: cd ../back-stage
-        - run: npm install      
+        - run: cd ../back-stage
+        - run: npm install
         - run: npm run uploadGcsTest
-        
