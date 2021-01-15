@@ -15,9 +15,9 @@ const projectIdProd = "tutor-204108";
 const keyFileNameTest = "tutor-test.json";
 const keyFileNameProd = "tutor.json";
 
-const projectName = "app/survey";
+const projectName = "app/questionnaire";
 
-const distDir = `${__dirname}/`;
+const distDir = path.join(__dirname, 'build/');
 
 const gcsOptionTest = {
     projectId: projectIdTest,
@@ -30,7 +30,7 @@ const gcsOptionProd = {
     projectId: projectIdProd,
     keyFileName: keyFileNameProd,
     bucket: bucketNameForProd,
-    cacheControl: 'no-store, no-transform'
+    cacheControl: 'public, max-age=10800'
 };
 
 function buildHtml() {
@@ -73,7 +73,7 @@ async function copyStaticFromSrcToBuild() {
 async function uploadToGCS(gcsOption) {
     const storage = new Storage({
         projectId: gcsOption.projectId,
-        keyFileName: "tutor-test.json"
+        keyFileName: gcsOption.keyFileName
     });
     cleanGCS(gcsOption.bucket, storage)
         .then(async () => {
@@ -105,13 +105,11 @@ async function findUploadFullPaths(dir, uploadFullPaths = []) {
     for (let file of files) {
         const fullPath = path.join(dir, file);
         const status = await fs.statSync(fullPath);
-        if (!fullPath.match("node_modules")) {
-            if (status.isDirectory()) {
-                uploadFullPaths = await findUploadFullPaths(fullPath, uploadFullPaths);
-            } else {
-                uploadFullPaths.push(fullPath);
-            }
-        }
+        if (status.isDirectory()) {
+            uploadFullPaths = await findUploadFullPaths(fullPath, uploadFullPaths);
+        } else {
+            uploadFullPaths.push(fullPath);
+        }    
     }
     return uploadFullPaths;
 }
@@ -149,9 +147,9 @@ async function connectLiveServer() {
     });
 }
 
-exports.uploadGcsTest = gulp.series(uploadToGCS.bind(uploadToGCS, gcsOptionTest));
-exports.uploadGcsProd = gulp.series(uploadToGCS.bind(uploadToGCS, gcsOptionProd));
 exports.build = gulp.series(htmlTask, copyStaticFromSrcToBuild);
+exports.uploadGcsTest = gulp.series(exports.build, uploadToGCS.bind(uploadToGCS, gcsOptionTest));
+exports.uploadGcsProd = gulp.series(exports.build, uploadToGCS.bind(uploadToGCS, gcsOptionProd));
 exports.watch = gulp.parallel(watchFiles);
 exports.dev = gulp.series(
     exports.build,
