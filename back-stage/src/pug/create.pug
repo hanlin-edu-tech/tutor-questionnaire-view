@@ -1,0 +1,94 @@
+doctype html
+html(lang='tw')
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(charset='UTF-8')
+        meta(http-equiv='X-UA-Compatible', content='ie=edge')
+        meta(http-equiv='cache-control', content='no-cache')
+        meta(http-equiv='pragma', content='no-cache')
+        meta(http-equiv='expires', content='0')
+        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet")
+        title
+    style(type="text/css").
+        #questionField {
+            background-color:#e3e3e3; 
+            padding:15px; 
+            border-radius:10px;
+        }
+        .invalidQuestion {
+            border:1px solid red
+        }
+            .modal-success {
+            z-index: 1000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F5F5;
+            -webkit-animation: show 1s forwards;
+                    animation: show 1s forwards; 
+        }
+        .modal-success .success-banner {
+            width: 100%;
+            height: 240px;
+            background-size: cover;
+            background-position: center center; 
+        }
+        .modal-success .success-text {
+            text-align: center;
+            padding: 30px 0px;
+            color: #0D6CBE;
+            font-size: 22px;
+            font-weight: 500; 
+        }
+        .modal-success .success-content {
+            text-align: center;
+            font-size: 14px; 
+        }
+        ion-icon {
+            font-size:25px;
+            color:grey;
+            height:38px;
+        }
+    body
+        .container#app
+            form#form
+                .form-group
+                    label(for='name') 問卷名稱
+                    input#name.form-control(data-field="name" required="required")
+                    .invalid-feedback 請輸入問卷名稱
+                .form-group
+                    label(for='description') 前導訊息
+                    textarea#description.form-control(rows="3" data-field="description" required="required")
+                    .invalid-feedback 請輸入前導訊息
+                #questionField
+                    .form-row
+                        .form-group.col-md-6 題目
+                        .form-group.col-md-2 類型
+                        .form-group.col-md-3 選項
+                        .form-group.col-md-1 必填
+                    div.questions                
+                        a-question(index="0")                    
+                    div.btn.btn-primary#addQuestion 新增題目                  
+                div
+                    small.text-danger#errMsg
+                p
+                .form-group
+                    label(for='finishMsg') 結束訊息
+                    textarea#finishMsg.form-control(rows="3" data-field="finishMsg" required=true)
+                    .invalid-feedback 請輸入結束訊息
+                .form-group
+                    label(for='callBackUrl') Call back URL
+                    input#callBackUrl.form-control(data-field="callBackUrl")
+                .form-group
+                    label(for='extraInfo') 其他
+                    textarea#extraInfo.form-control(rows="3" data-field="extraInfo")
+                div#submit.btn.btn-primary 送出
+        //- .modal-success.hide
+        //-     .modal-body
+        //-         .success-banner
+        //-         .success-text 送出成功
+        script(src="./js/create.js")
+        script(src="./js/question.js")
+        script(type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js")
