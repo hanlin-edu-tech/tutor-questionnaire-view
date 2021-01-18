@@ -8,21 +8,20 @@ html(lang='tw')
         script(src='https://apis.google.com/js/platform.js', async='', defer='')
     body            
         .g-signin2(data-onsuccess="onSignIn" data-theme="dark") 
-        script(src="./js/navbar.js")     
+        script(src="./js/dataprovider/questionnaire.js")
+        script(src="./js/navbar.js")          
         script.
             function onSignIn(googleUser) {            
             const host = window.location.hostname;
+            let client_id = document.querySelector('meta[name="google-signin-client_id"]').getAttribute('content');
             if(host === 'www.ehanlin.com.tw'){
                 document.querySelector('meta[name="google-signin-client_id"]').setAttribute('content', '745967530532-kr1mhm9c46r08l43oeanmhtd04ehgodp.apps.googleusercontent.com')
+                client_id = document.querySelector('meta[name="google-signin-client_id"]').getAttribute('content');
             }
-            const id_token = googleUser.getAuthResponse().id_token
-            console.log(id_token)
-            fetch(`https://${host}/questionnaire/tokensignin?idtoken=${id_token}`,{
-                method: 'POST'
-            }).then(res => {                
-                window.location.href="./list.html?type=template";
-            }).catch(err => {
-                console.log(err)
-            })
+            const googleAuth = gapi.auth2.init({client_id})
+            const auth = googleUser.getAuthResponse()
+            const id_token = auth.id_token
+            googleAuth.disconnect();
+            window.eHanlin.dataprovider.questionnaire.login(id_token);        
             }
             
