@@ -4,6 +4,9 @@ on:
   push:
     tags:
         - v*-SNAPSHOT
+defaults:
+  run:
+    working-directory: front-stage
 
 jobs:
   build:
@@ -20,6 +23,7 @@ jobs:
               node-version: ${{ matrix.node-version }}
         - run: echo -n '${{ secrets.GCS_TUTOR_TEST }}' > tutor-test.json
         - run: ls -l
+        - run: export GOOGLE_APPLICATION_CREDENTIALS="tutor-test.json"
         - run: npm install
         - run: npm run uploadGcsTest
 

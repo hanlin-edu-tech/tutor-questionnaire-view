@@ -1,0 +1,28 @@
+doctype html
+html(lang='tw')
+    head
+        meta(charset='utf-8')
+        title &#x767B;&#x5165;
+        meta(name='google-signin-scope', content='profile email')
+        meta(name='google-signin-client_id', content='184800465453-m9hnsqo5o4ihqq15feiqfospq4olce50.apps.googleusercontent.com')
+        script(src='https://apis.google.com/js/platform.js', async='', defer='')
+    body            
+        .g-signin2(data-onsuccess="onSignIn" data-theme="dark") 
+        script(src="./js/navbar.js")     
+        script.
+            function onSignIn(googleUser) {            
+            const host = window.location.hostname;
+            if(host === 'www.ehanlin.com.tw'){
+                document.querySelector('meta[name="google-signin-client_id"]').setAttribute('content', '745967530532-kr1mhm9c46r08l43oeanmhtd04ehgodp.apps.googleusercontent.com')
+            }
+            const id_token = googleUser.getAuthResponse().id_token
+            console.log(id_token)
+            fetch(`https://${host}/questionnaire/tokensignin?idtoken=${id_token}`,{
+                method: 'POST'
+            }).then(res => {                
+                window.location.href="./list.html?type=template";
+            }).catch(err => {
+                console.log(err)
+            })
+            }
+            

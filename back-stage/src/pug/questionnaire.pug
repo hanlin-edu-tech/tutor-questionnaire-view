@@ -1,0 +1,62 @@
+doctype html
+html(lang='tw')
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(charset='UTF-8')
+        meta(http-equiv='X-UA-Compatible', content='ie=edge')
+        meta(http-equiv='cache-control', content='no-cache')
+        meta(http-equiv='pragma', content='no-cache')
+        meta(http-equiv='expires', content='0')
+        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet")
+        title
+
+    body
+        nav-bar(current="questionnaire")
+        #app.container.mt-3
+            table.table.table-striped.table-bordered
+                tr
+                    td.table-info(width="150") 樣板名稱 
+                    td(data-field="name")
+                tr
+                    td.table-info 填寫日期
+                    td(data-field="finished") 
+                tr
+                    td.table-info 填寫人
+                    td(data-field="email")
+            table.table.table-striped.table-bordered#questionList
+                tr
+                    td.table-info(width="600") 題目
+                    td.table-info 回答
+    script(src="./js/navbar.js")
+    script(src="./js/dataprovider/questionnaire.js")
+    script.
+      (() => {
+      const search = (new URL(window.location)).searchParams;
+      const questionnaireId = search.get('id');
+
+      async function init(){
+      const questionnaire = await window.eHanlin.dataprovider.questionnaire.getQuestionnaire(questionnaireId)
+      composeFields(questionnaire);
+      }
+
+      function composeFields(questionnaire){
+      document.querySelector('[data-field="name"]').innerText = questionnaire.template.name;
+      document.querySelector('[data-field="finished"]').innerText = Intl.DateTimeFormat('zh-TW').format(new Date(questionnaire.finished));
+      document.querySelector('[data-field="email"]').innerText = questionnaire.email;
+      const questionList = document.querySelector('#questionList');
+      questionnaire.questions.forEach((it, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = questionTemplate(it, idx);
+        questionList.append(tr);
+      })
+      }
+
+      const questionTemplate = (question, idx) => {
+      return `
+      <td>${idx + 1}. ${question.topic}</td>
+      <td>${question.answer ? question.answer : '未作答'}</td>
+      `;
+      }
+      
+      init();
+      })();
