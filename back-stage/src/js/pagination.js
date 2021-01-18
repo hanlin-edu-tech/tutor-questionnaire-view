@@ -70,7 +70,7 @@ const itemTemplate = (item, type) => {
     `:
     `
     <a href="./questionnaire.html?id=${item.id}" class="d-flex">
-      <div class="col-md-4 colTitle">${item.name}</div> 
+      <div class="col-md-4 colTitle">${item.template.name}</div> 
       <div class="col-md-4">${item.email}</div>
       <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
     </a>`;
