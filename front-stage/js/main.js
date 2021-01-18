@@ -57,9 +57,9 @@ const text = (question, index, isView) => {
             <div class="form-topic">${index + 1}. ${question.topic}
               ${question.required === true ? '<span style="color: #F28121;">*</span>' : ''}			
             </div>
-            <div class="form-must hide" id="must${index}">*請填寫這個欄位*</div>
+            <div class="form-must hide" id="must${index}">*請填寫這個欄位*</div>            
             <div class="form-item">			
-                    <textarea placeholder="請填入文字" name="qa${index}" data-subject-answer="500">${isView ? question.answer : ''}</textarea>
+              ${isView ? question.answer : `<textarea placeholder="請填入文字" name="qa${index}" data-subject-answer="500">${isView ? question.answer : ''}</textarea>`}
             </div>
           </div>`;
 };
@@ -79,9 +79,10 @@ const text = (question, index, isView) => {
   }
 
   async function initUserQuestionnaireView(questionnaireId) {
-    const userQuestionnaire = await window.eHanlin.dataprovider.questionnaire.getUserQuestionnaire(questionnaireId);
+    const userQuestionnaire = await window.eHanlin.dataprovider.questionnaire.getQuestionnaire(questionnaireId);
     document.querySelector('#name').innerText = userQuestionnaire.template.name;
     document.querySelector('#description').innerText = userQuestionnaire.template.description;
+    document.querySelector('.row-btn.send').classList.add('hide');
     composeForm(userQuestionnaire.questions, true);
   }
 
