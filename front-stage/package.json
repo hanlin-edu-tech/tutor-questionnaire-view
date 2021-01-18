@@ -23,7 +23,7 @@
     "eqeqeq": true
   },
   "dependencies": {
-    "@google-cloud/storage": "^5.5.0",
+    "@google-cloud/storage": "^5.7.2",
     "fs": "0.0.1-security",
     "gulp": "^4.0.2",
     "path": "^0.12.7"
