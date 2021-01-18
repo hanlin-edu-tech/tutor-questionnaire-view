@@ -15,13 +15,7 @@
       console.log(template);
       const isValid = validate(template);
       if(isValid){
-        const success = window.eHanlin.dataprovider.questionnaire.submitTemplate(template);
-        if(success){
-          document.querySelector('.modal-success').classList.remove('hide');
-          window.setTimeout(()=>{window.location.href='./list.html?type=template';},500);
-        }else{
-          alert('發生錯誤，請稍後再試');
-        }
+        window.eHanlin.dataprovider.questionnaire.submitTemplate(template);        
       }    
     });
   }
@@ -117,7 +111,7 @@
           }
         });
         const duplicate = q.options.filter((item, index) => q.options.indexOf(item) !== index);
-        if(duplicate && errMsg.indexOf('選項不得為空 \n') === -1){
+        if(duplicate.length > 0 && errMsg.indexOf('選項不得為空 \n') === -1){
           errMsg += '選項不得重複 \n';
         }
       }

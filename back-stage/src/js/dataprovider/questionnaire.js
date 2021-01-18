@@ -202,11 +202,14 @@
             console.error(err);
             return false;
           });
-    if(res.type === 'cors' && res.status === 403){
+    if(res.status === 403){
       alert('請先登入');
       window.location.href="./index.html";
+    } 
+    if(res.ok){
+      document.querySelector('.modal-success').classList.remove('hide');
+      window.setTimeout(()=>{window.location.href='./list.html?type=template';},500);
     }
-    return res.ok ? true : false;
   };
 
   const login = async (id_token) => {
@@ -223,7 +226,7 @@
     }
   };
 
-  const logout = async (id_token) => {
+  const logout = async () => {
     const res = await fetch(`https://${host}/questionnaire/logout`,{
       method: 'GET'
     }).catch(err => {
