@@ -8,7 +8,7 @@ const bucketNameForProd = "tutor-apps";
 
 const projectIdTest = "tutor-test-238709";
 const projectIdProd = "tutor-204108";
-const keyFileNameTest = "tutor-test.json";
+const keyFileNameTest = "/tutor-test.json";
 const keyFileNameProd = "tutor.json";
 
 const projectName = "app/survey";
@@ -32,7 +32,7 @@ const gcsOptionProd = {
 async function uploadToGCS(gcsOption) {
     const storage = new Storage({
         projectId: gcsOption.projectId,
-        keyFileName: "tutor-test.json"
+        keyFileName: gcsOption.keyFileName
     });
     cleanGCS(gcsOption.bucket, storage)
         .then(async () => {
