@@ -209,6 +209,34 @@
     return res.ok ? true : false;
   };
 
+  const login = async (id_token) => {
+    const res = await fetch(`https://${host}/questionnaire/tokensignin?idtoken=${id_token}`,{
+      method: 'POST'
+    }).catch(err => {
+      console.error(err);
+      alert('登入失敗，請稍後再試');
+    });
+    if(res.ok){
+      window.location.href="./list.html?type=template";
+    }else{
+      alert('登入失敗，請稍後再試');
+    }
+  };
+
+  const logout = async (id_token) => {
+    const res = await fetch(`https://${host}/questionnaire/logout`,{
+      method: 'GET'
+    }).catch(err => {
+      console.error(err);
+      alert('發生錯誤，請稍後再試');
+    });
+    if(res.ok){
+      window.location.href="./index.html";
+    }else{
+      alert('發生錯誤，請稍後再試');
+    }
+  };
+
   if (window.eHanlin === undefined || window.eHanlin === null) {
     window.eHanlin = {};
   }
@@ -234,6 +262,8 @@
     }),
     submitTemplate: ((template) => {
       return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localSubmit() : submit(template);
-    })
+    }),
+    login: ((id_token) => { return login(id_token); }),
+    logout: (() => { logout(); })
   };
 })();
