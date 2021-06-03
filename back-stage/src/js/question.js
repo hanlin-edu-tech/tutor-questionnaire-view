@@ -29,7 +29,6 @@
       <option value="單選題">單選題</option>
       <option value="多選題">多選題</option>
       <option value="問答題">問答題</option>
-      <option value="下拉選單">下拉選單</option>
     </select>
   </div>
   <div class="form-group col-md-3">

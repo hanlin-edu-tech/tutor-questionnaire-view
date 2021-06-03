@@ -64,28 +64,6 @@ const text = (question, index, isView) => {
           </div>`;
 };
 
-const dropmenu = (question, index, isView)=> {
-  return `<div class="form-group" id="q${index}">
-            <div class="form-topic">${index + 1}. ${question.topic}
-              ${question.required === true ? '<span style="color: #F28121;">*</span>' : ''}			
-            </div>
-            <div class="form-must hide" id="must${index}">*請填寫這個欄位*</div>            
-            <div class="form-item">			
-            ${isView ? question.answer : dropSelection(question.options, index)}
-            </div>
-          </div>`;
-}
-
-const dropSelection = (options, questionIdx) => {
-  let optionStr = '';
-  optionStr += `<select name="drop${questionIdx}">`
-  options.forEach((opt, idx) => {
-    optionStr += `<option value="${opt}">${opt}</option>`;
-  });
-  optionStr += `</select">`
-  return optionStr;
-};
-
 (() => {
   const params = new URL(document.location).searchParams;
   const id = params.get("id");
@@ -127,9 +105,6 @@ const dropSelection = (options, questionIdx) => {
           break;
         case '問答題':
           document.querySelector('#content').innerHTML += text(it, idx, isView);
-          break;
-        case '下拉選單':
-          document.querySelector('#content').innerHTML += dropmenu(it, idx, isView);
           break;
       }
     });
@@ -189,12 +164,6 @@ const dropSelection = (options, questionIdx) => {
         const answer = document.querySelector(`[name=qa${idx}]`).value.trim();
         if (answer !== '') {
           answers.push(answer);
-        }
-        return answers;
-      case '下拉選單':
-        const dropAnswer = document.querySelector(`[name=drop${idx}]`).value.trim();
-        if (dropAnswer !== '') {
-          answers.push(dropAnswer);
         }
         return answers;
     }

@@ -2,7 +2,6 @@ const fs = require("fs");
 const gulp = require("gulp");
 const { Storage } = require('@google-cloud/storage');
 const path = require('path');
-const connect = require('gulp-connect');
 
 const bucketNameForTest = "tutor-test-apps";
 const bucketNameForProd = "tutor-apps";
@@ -29,14 +28,6 @@ const gcsOptionProd = {
     bucket: bucketNameForProd,
     cacheControl: 'no-store, no-transform'
 };
-
-async function connectLocalServer(){
-    connect.server({
-      root: './',
-      port: 9000,
-      livereload: true
-    })
-}
 
 async function uploadToGCS(gcsOption) {
     const storage = new Storage({
@@ -106,4 +97,3 @@ function uploadObject(path, storage, gcsOption) {
 
 exports.uploadGcsTest = gulp.series(uploadToGCS.bind(uploadToGCS, gcsOptionTest));
 exports.uploadGcsProd = gulp.series(uploadToGCS.bind(uploadToGCS, gcsOptionProd));
-exports.server = gulp.series(connectLocalServer);

@@ -7,9 +7,7 @@
   },
   "scripts": {
     "uploadGcsTest": "gulp uploadGcsTest",
-    "uploadGcsProd": "gulp uploadGcsProd",
-    "dev": "gulp dev",
-    "build": "gulp build"
+    "uploadGcsProd": "gulp uploadGcsProd"
   },
   "author": "fluxion@ehanlin.com.tw",
   "license": "ISC",
