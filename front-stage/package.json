@@ -8,7 +8,8 @@
   },
   "scripts": {
     "uploadGcsTest": "gulp uploadGcsTest",
-    "uploadGcsProd": "gulp uploadGcsProd"
+    "uploadGcsProd": "gulp uploadGcsProd",
+    "start": "gulp server"
   },
   "author": "fluxion@ehanlin.com.tw",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "@google-cloud/storage": "^5.7.2",
     "fs": "0.0.1-security",
     "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0",
     "path": "^0.12.7"
   }
 }
