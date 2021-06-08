@@ -105,9 +105,18 @@
             form.innerHTML = mainDom;
             shadowRoot.appendChild(form);
             let topic = form.querySelector('#topic');
-            topic.disabled = true
+            topic.disabled = true;
             topic.value = '與上同題';
+
+            //刪除答題框的listener
+            form.querySelector('#delete-question').addEventListener('click', (e)=>{
+              form.remove();
+            });
+
+            //增加選項按鈕的listener
             onClickAddOptionHandler();
+
+            //刪除第二個答題框以後的增加選項鈕
             form.querySelector('.add-option-question-type').remove();
           });
         });
