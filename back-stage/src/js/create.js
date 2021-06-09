@@ -17,7 +17,7 @@
 
       let divider = document.createElement('div');
       divider.id = `divider-id-${d_index}`;
-      divider.classList.add('col-md-12');
+      divider.classList.add('divider-class' ,'col-md-12');
       divider.style.marginBottom = "20px";
 
       let dividerLine = document.createElement('div');
@@ -93,6 +93,17 @@
       })
       questions.push({qid: it.getAttribute('index'), qContent: questionList});
     });
+
+    let phase = [];
+    let phaseCount = 0;
+    document.querySelectorAll('.divider-class').forEach(it => {
+      let tempPhase = {}
+      tempPhase.phase = phaseCount;
+      tempPhase.lastQuestion = it.id.split('divider-id-')[1];
+      phaseCount++;
+      phase.push(tempPhase);
+    });
+    template.phase = phase;
     template.questions = questions;
     return template;
   }
