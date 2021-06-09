@@ -99,7 +99,8 @@
     document.querySelectorAll('.divider-class').forEach(it => {
       let tempPhase = {}
       tempPhase.phase = phaseCount;
-      tempPhase.lastQuestion = it.id.split('divider-id-')[1];
+      tempPhase.lastQuestionIndex = it.id.split('divider-id-')[1];
+      tempPhase.callback = it.querySelector('.phaseCallBack').value;
       phaseCount++;
       phase.push(tempPhase);
     });
