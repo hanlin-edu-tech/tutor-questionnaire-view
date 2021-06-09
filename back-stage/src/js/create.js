@@ -12,10 +12,13 @@
   function onClickAddPhaseHandler() {
     document.querySelector('#addPhase').addEventListener('click', () => {
       let currentQuestionsAll = document.querySelectorAll('a-question');
-      let currentQuestionAllLength = currentQuestionsAll.length;
+      let lastQuestion = currentQuestionsAll[currentQuestionsAll.length-1];
+      let d_index = lastQuestion.getAttribute('index');
+
       let divider = document.createElement('div');
+      divider.id = `divider-id-${d_index}`;
       divider.classList.add('col-md-12');
-      divider.style.marginBottom = "10px";
+      divider.style.marginBottom = "20px";
 
       let dividerLine = document.createElement('div');
       dividerLine.classList.add('col-md-10');
@@ -31,9 +34,17 @@
       deleteDivider.addEventListener('click', () => {
         deleteDivider.parentNode.remove();
       });
-      currentQuestionsAll[currentQuestionAllLength-1].insertAdjacentElement('afterend',divider);
-      divider.insertAdjacentElement('beforeend',dividerLine);
-      divider.insertAdjacentElement('beforeend',deleteDivider);
+
+      let callBack = document.createElement('TEXTAREA');
+      callBack.classList.add('phaseCallBack', 'form-control', 'col-md-10');
+      callBack.placeholder = "階段Call back URL"
+
+      if(document.querySelector(`#divider-id-${d_index}`)==null){
+        lastQuestion.insertAdjacentElement('afterend',divider);
+        divider.insertAdjacentElement('beforeend',callBack);
+        divider.insertAdjacentElement('beforeend',dividerLine);
+        divider.insertAdjacentElement('beforeend',deleteDivider);
+      }
     });
   }
 
