@@ -9,6 +9,34 @@
     });
   }
 
+  function onClickAddPhaseHandler() {
+    document.querySelector('#addPhase').addEventListener('click', () => {
+      let currentQuestionsAll = document.querySelectorAll('a-question');
+      let currentQuestionAllLength = currentQuestionsAll.length;
+      let divider = document.createElement('div');
+      divider.classList.add('col-md-12');
+      divider.style.marginBottom = "10px";
+
+      let dividerLine = document.createElement('div');
+      dividerLine.classList.add('col-md-10');
+      dividerLine.style.border = "1px solid red";
+      dividerLine.style.height = '1px';
+      dividerLine.style.display = 'inline-block';
+
+      let deleteDivider = document.createElement('div');
+      deleteDivider.classList.add('btn', 'btn-secondary', 'btn-sm');
+      deleteDivider.innerHTML = "刪除階段";
+      deleteDivider.style.marginLeft = "10px";
+      deleteDivider.style.display = 'inline-block';
+      deleteDivider.addEventListener('click', () => {
+        deleteDivider.parentNode.remove();
+      });
+      currentQuestionsAll[currentQuestionAllLength-1].insertAdjacentElement('afterend',divider);
+      divider.insertAdjacentElement('beforeend',dividerLine);
+      divider.insertAdjacentElement('beforeend',deleteDivider);
+    });
+  }
+
   function onClickSubmitHandler() {
     document.querySelector('#submit').addEventListener('click', () => {
       const template = getFormInputValues();
@@ -52,7 +80,7 @@
         }
         questionList.push(question);
       })
-      questions.push(questionList);
+      questions.push({qid: it.getAttribute('index'), qContent: questionList});
     });
     template.questions = questions;
     return template;
@@ -93,7 +121,7 @@
       errMsg += '至少要有一題問卷題目 \n';
     }
     questions.forEach(it => {
-      it.forEach(q => {
+      it.qContent.forEach(q => {
         if (!q.topic && errMsg.indexOf('題目不得為空 \n') === -1) {
           errMsg += '題目不得為空 \n';
         }
@@ -127,4 +155,5 @@
 
   onClickAddQuestionHandler();
   onClickSubmitHandler();
+  onClickAddPhaseHandler();
 })();
