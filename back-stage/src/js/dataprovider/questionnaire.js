@@ -185,7 +185,7 @@
     return await res.json();    
   };
 
-  const localSubmit = async () => {
+  const localSubmit = async (template) => {
     window.setTimeout(()=>{ return true; },300);
   };
 
@@ -264,7 +264,7 @@
       return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnaire() : wwwQuestionnaire(id);
     }),
     submitTemplate: ((template) => {
-      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localSubmit() : submit(template);
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localSubmit(template) : submit(template);
     }),
     login: ((id_token) => { return login(id_token); }),
     logout: (() => { logout(); })

@@ -57,9 +57,10 @@
   };
   customElements.define('a-question', class extends HTMLElement {
     connectedCallback() {
-      const questionIndex = this.getAttribute('index');
-      this.shadowRoot.querySelector('#delete-question').addEventListener('click', () => {
+      const questionIndex = parseInt(this.getAttribute('index'));
+      this.shadowRoot.querySelector('#delete-question').addEventListener('click', (e) => {
         document.querySelector(`#q${questionIndex}`).remove();
+        window.refreshItem(questionIndex);
       });
     }
 
@@ -67,11 +68,6 @@
       super();    
       const shadowRoot = this.attachShadow({ mode: 'open' });
       shadowRoot.innerHTML = createTemplate();
-
-      // let formList = document.querySelectorAll('.form-row');
-      // let length = formList.length;
-      // let id = formList[length-1].id + 1;
-      // shadowRoot.querySelector('.form-row').id = id;
 
       function onClickDeleteOptionHandler(dom){
         dom.addEventListener('click', (e) => {        

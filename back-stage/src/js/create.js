@@ -2,9 +2,11 @@
   function onClickAddQuestionHandler() {
     document.querySelector('#addQuestion').addEventListener('click', () => {
       const elem = document.createElement('a-question');
-      const index = document.querySelectorAll('a-question').length;
-      elem.setAttribute('index', index);
-      elem.id = `q${index}`;
+      let allQuestions = document.querySelectorAll('a-question');
+      let lastOne = allQuestions.length-1;
+      let lastIndex = lastOne<0 ? 0 : parseInt(allQuestions[lastOne].getAttribute('index'))+1;
+      elem.setAttribute('index', lastIndex);
+      elem.id = `q${lastIndex}`;
       document.querySelector('.questions').append(elem);
     });
   }
@@ -99,13 +101,14 @@
     document.querySelectorAll('.divider-class').forEach(it => {
       let tempPhase = {}
       tempPhase.phase = phaseCount;
-      tempPhase.lastQuestionIndex = it.id.split('divider-id-')[1];
+      tempPhase.lastQuestionId = it.id.split('divider-id-')[1];
       tempPhase.callback = it.querySelector('.phaseCallBack').value;
       phaseCount++;
       phase.push(tempPhase);
     });
     template.phase = phase;
     template.questions = questions;
+    console.log(JSON.stringify(template))
     return template;
   }
 
@@ -175,6 +178,61 @@
     })    
     return errMsg;
   }
+
+  function refreshItem(questionIndex){
+    let length = document.querySelectorAll(`.divider-class`).length;
+    document.querySelectorAll(`.divider-class`).forEach((it, index) => {
+      let tempId = parseInt(it.id.split('divider-id-')[1]);
+
+      //刪去的項比divider大，則不須-1
+      if(questionIndex>tempId) return;
+
+      let prevId = -1;
+      let leave = false;
+
+      let qLength = document.querySelectorAll('a-question').length;
+      if(qLength==0){
+        it.remove();
+      }
+      document.querySelectorAll('a-question').forEach((que, qIndex) => {
+        let lastLargestId = parseInt(que.id.split('q')[1]);
+
+        if(leave){
+          return;
+        }
+
+        if(lastLargestId<tempId){
+          prevId = lastLargestId;
+          if(index == length-1 && qLength-1 == qIndex){
+            if(lastLargestId<tempId){
+              console.log(lastLargestId);
+              if(prevId==0 || !!document.querySelector(`#divider-id-${lastLargestId}`)){
+                it.remove();
+              }
+              it.id = `divider-id-${lastLargestId}`;
+            }
+          }
+          return;
+        }else if(lastLargestId==tempId){
+          leave = true;
+        }else{
+          if(prevId==-1 || !!document.querySelector(`#divider-id-${prevId}`)){
+            it.remove();
+          }
+          it.id = `divider-id-${prevId}`;
+          leave = true;
+        }
+      });
+      
+    });
+
+    // let questionCount = 0;
+    // document.querySelectorAll('a-question').forEach(it => {
+    //   it.setAttribute('index', questionCount);
+    //   it.id = `q${questionCount++}`;
+    // });
+  }
+  window.refreshItem = refreshItem;
 
   onClickAddQuestionHandler();
   onClickSubmitHandler();
