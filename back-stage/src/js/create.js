@@ -17,31 +17,31 @@
       let lastQuestion = currentQuestionsAll[currentQuestionsAll.length-1];
       let d_index = lastQuestion.getAttribute('index');
 
-      let divider = document.createElement('div');
-      divider.id = `divider-id-${d_index}`;
-      divider.classList.add('divider-class' ,'col-md-12');
-      divider.style.marginBottom = "20px";
-
-      let dividerLine = document.createElement('div');
-      dividerLine.classList.add('col-md-10');
-      dividerLine.style.border = "1px solid red";
-      dividerLine.style.height = '1px';
-      dividerLine.style.display = 'inline-block';
-
-      let deleteDivider = document.createElement('div');
-      deleteDivider.classList.add('btn', 'btn-secondary', 'btn-sm');
-      deleteDivider.innerHTML = "刪除階段";
-      deleteDivider.style.marginLeft = "10px";
-      deleteDivider.style.display = 'inline-block';
-      deleteDivider.addEventListener('click', () => {
-        deleteDivider.parentNode.remove();
-      });
-
-      let callBack = document.createElement('TEXTAREA');
-      callBack.classList.add('phaseCallBack', 'form-control', 'col-md-10');
-      callBack.placeholder = "階段Call back URL"
-
       if(document.querySelector(`#divider-id-${d_index}`)==null){
+        let divider = document.createElement('div');
+        divider.id = `divider-id-${d_index}`;
+        divider.classList.add('divider-class' ,'col-md-12');
+        divider.style.marginBottom = "20px";
+
+        let dividerLine = document.createElement('div');
+        dividerLine.classList.add('col-md-10');
+        dividerLine.style.border = "1px solid red";
+        dividerLine.style.height = '1px';
+        dividerLine.style.display = 'inline-block';
+
+        let deleteDivider = document.createElement('div');
+        deleteDivider.classList.add('btn', 'btn-secondary', 'btn-sm');
+        deleteDivider.innerHTML = "刪除階段";
+        deleteDivider.style.marginLeft = "10px";
+        deleteDivider.style.display = 'inline-block';
+        deleteDivider.addEventListener('click', () => {
+          deleteDivider.parentNode.remove();
+        });
+
+        let callBack = document.createElement('TEXTAREA');
+        callBack.classList.add('phaseCallBack', 'form-control', 'col-md-10');
+        callBack.placeholder = "階段Call back URL"
+
         lastQuestion.insertAdjacentElement('afterend',divider);
         divider.insertAdjacentElement('beforeend',callBack);
         divider.insertAdjacentElement('beforeend',dividerLine);
@@ -180,57 +180,48 @@
   }
 
   function refreshItem(questionIndex){
-    let length = document.querySelectorAll(`.divider-class`).length;
-    document.querySelectorAll(`.divider-class`).forEach((it, index) => {
-      let tempId = parseInt(it.id.split('divider-id-')[1]);
+    let allDividerClass = document.querySelectorAll(`.divider-class`);
+    let length = allDividerClass.length;
+    let isRemoved = false;
+    for(let i=0;i<allDividerClass.length;i++){
+      let tempId = parseInt(allDividerClass[i].id.split('divider-id-')[1]);
 
       //刪去的項比divider大，則不須-1
-      if(questionIndex>tempId) return;
+      if(questionIndex>tempId) continue;
 
       let prevId = -1;
-      let leave = false;
 
-      let qLength = document.querySelectorAll('a-question').length;
+      let qList = document.querySelectorAll('a-question');
+      let qLength = qList.length;
       if(qLength==0){
-        it.remove();
+        allDividerClass[i].remove();
       }
-      document.querySelectorAll('a-question').forEach((que, qIndex) => {
-        let lastLargestId = parseInt(que.id.split('q')[1]);
 
-        if(leave){
-          return;
-        }
-
-        if(lastLargestId<tempId){
+      for(let qIndex=0;qIndex<qLength;qIndex++){
+        let lastLargestId = parseInt(qList[qIndex].id.split('q')[1]);
+        if(lastLargestId<=tempId){
           prevId = lastLargestId;
-          if(index == length-1 && qLength-1 == qIndex){
+          if(i == length-1 && qLength-1 == qIndex){
             if(lastLargestId<tempId){
               console.log(lastLargestId);
               if(prevId==0 || !!document.querySelector(`#divider-id-${lastLargestId}`)){
-                it.remove();
+                allDividerClass[i].remove();
               }
-              it.id = `divider-id-${lastLargestId}`;
+              allDividerClass[i].id = `divider-id-${lastLargestId}`;
             }
           }
-          return;
-        }else if(lastLargestId==tempId){
-          leave = true;
-        }else{
-          if(prevId==-1 || !!document.querySelector(`#divider-id-${prevId}`)){
-            it.remove();
+          continue;
+        }else if(lastLargestId>tempId){
+          if(prevId==-1 || !!document.querySelector(`#divider-id-${prevId}` && qLength!=0)){
+            allDividerClass[i].remove();
           }
-          it.id = `divider-id-${prevId}`;
-          leave = true;
+          allDividerClass[i].id = `divider-id-${prevId}`;
+          isRemoved = true;
+          break;
         }
-      });
-      
-    });
-
-    // let questionCount = 0;
-    // document.querySelectorAll('a-question').forEach(it => {
-    //   it.setAttribute('index', questionCount);
-    //   it.id = `q${questionCount++}`;
-    // });
+      }
+      if(isRemoved) break;
+    }
   }
   window.refreshItem = refreshItem;
 
