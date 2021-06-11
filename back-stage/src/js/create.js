@@ -67,6 +67,7 @@
       template[it.dataset.field] = it.value.trim();
     });
     const questions = [];
+    refreshIndexBeforeSubmit();
     document.querySelectorAll('a-question').forEach(it => {
       const questionList = [];
       it.shadowRoot.querySelectorAll('.form-row').forEach(formIt => {
@@ -177,6 +178,19 @@
       });
     })    
     return errMsg;
+  }
+
+  function refreshIndexBeforeSubmit(){
+    let index = 0;
+    document.querySelectorAll('a-question').forEach(it => {
+      let divider = document.querySelector(`#divider-id-${it.getAttribute('index')}`);
+      if(divider!=null){
+        divider.id = `divider-id-${index}`;
+      }
+      it.id = `q${index}`;
+      it.setAttribute('index', index);
+      index++;
+    });
   }
 
   function refreshItem(questionIndex){
