@@ -54,8 +54,14 @@ function addPageItems(startItem = 0) {
     const li = document.createElement('li');
     li.classList.add('list-group-item');
     li.classList.add('list-group-item-action');
-    li.innerHTML = itemTemplate(it, type);
-    list.append(li);
+    try {
+      li.innerHTML = itemTemplate(it, type);
+      list.append(li);
+    }catch(error){
+      console.log(error);
+      li.innerHTML = itemTemplateWithOutTime(it, type);
+      list.append(li);
+    }
   });
 }
 
@@ -73,6 +79,23 @@ const itemTemplate = (item, type) => {
       <div class="col-md-4 colTitle">${item.template.name}</div> 
       <div class="col-md-4">${item.email}</div>
       <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
+    </a>`;
+};
+
+const itemTemplateWithOutTime = (item, type) => {
+  return type === 'template' ? 
+    `
+        <a href="./template.html?id=${item.id}" class="d-flex">
+          <div class="col-md-4 colTitle">${item.name}</div>
+          <div class="col-md-4">${item.author}</div>
+          <div class="col-md-4">不明</div>
+        </a>
+    `:
+    `
+    <a href="./questionnaire.html?id=${item.id}" class="d-flex">
+      <div class="col-md-4 colTitle">${item.template.name}</div> 
+      <div class="col-md-4">${item.email}</div>
+      <div class="col-md-4">不明</div>
     </a>`;
 };
 
