@@ -196,11 +196,10 @@
   function refreshItem(questionIndex){
     let allDividerClass = document.querySelectorAll(`.divider-class`);
     let length = allDividerClass.length;
-    let isRemoved = false;
     for(let i=0;i<allDividerClass.length;i++){
       let tempId = parseInt(allDividerClass[i].id.split('divider-id-')[1]);
 
-      //刪去的項比divider大，則不須-1
+      //刪去的項比divider大，則不須考慮
       if(questionIndex>tempId) continue;
 
       let prevId = -1;
@@ -230,11 +229,9 @@
             allDividerClass[i].remove();
           }
           allDividerClass[i].id = `divider-id-${prevId}`;
-          isRemoved = true;
           break;
         }
       }
-      if(isRemoved) break;
     }
   }
   window.refreshItem = refreshItem;
