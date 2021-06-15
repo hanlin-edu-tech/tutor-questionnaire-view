@@ -57,7 +57,7 @@ html(lang='tw')
 
       const template = await window.eHanlin.dataprovider.questionnaire.getTemplate(templateId)
       composeFields(template);
-      composeQuestions(template.questions);
+      composeQuestions(template);
       }
 
       function composeFields(template){
@@ -83,22 +83,51 @@ html(lang='tw')
       document.execCommand('copy')
       }
 
-      function composeQuestions(questions){
+      function composeQuestions(template){
       const questionList = document.querySelector('#questionList');
-      questions.forEach((it, idx) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = questionTemplate(it, idx);
-      questionList.append(tr);
-      })
+        template.questions.forEach((it, idx) => {
+            if(it.qid!=null){
+                it.qContent.forEach((content, cIndex) => {
+                let sendIndex = idx;
+                if(cIndex>0){
+                    sendIndex = null;
+                }
+                createItem(template.phase, questionList, it.qid, content, sendIndex);
+            });
+            }else{
+                createItem(template.phase, questionList, it.qid, it, idx);
+            }
+        })
+      }
+
+      const createItem = (phase, questionList, qid, content, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = questionTemplate(content, index);
+        questionList.append(tr);
+        phase.forEach((p, pIndex)=>{
+            if(qid!=null && p.lastQuestionId==qid && index!=null){ //index null表與上同題
+                const divLine = document.createElement('div');
+                divLine.innerHTML = `---階段${p.phase+1}---`;
+                questionList.append(divLine);
+            }
+        });
       }
 
       const questionTemplate = (question, idx) => {
-      return `
-      <td>${idx + 1}. ${question.topic}</td>
-      <td>${question.type}</td>
-      <td>${question.options ? question.options : '無'}</td>
-      <td>${question.required ? '是' : '否'}</td>
-      `;
+          let htmlString = `
+            <td>${idx + 1}. ${question.topic}</td>
+            <td>${question.type}</td>
+            <td>${question.options ? question.options : '無'}</td>
+            <td>${question.required ? '是' : '否'}</td>
+            `;
+        if(idx==null)
+            htmlString = `
+            <td>${question.topic}</td>
+            <td>${question.type}</td>
+            <td>${question.options ? question.options : '無'}</td>
+            <td>${question.required ? '是' : '否'}</td>
+            `;
+        return htmlString;
       }
       
       init();
