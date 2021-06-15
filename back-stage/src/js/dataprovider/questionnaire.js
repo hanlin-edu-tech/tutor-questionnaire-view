@@ -256,7 +256,7 @@
 
   const submit = async (template) => {
     template.enabled = true;
-    const res = await fetch(`https://${host}/questionnaire/templates/create`,
+    const res = await fetch(`https://${host}/questionnaire/templates/create/v2`,
 					{			
 					method:'post',
 					headers: {
