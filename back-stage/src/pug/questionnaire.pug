@@ -46,17 +46,37 @@ html(lang='tw')
       document.querySelector('[data-field="email"]').innerText = questionnaire.email;
       const questionList = document.querySelector('#questionList');
       questionnaire.questions.forEach((it, idx) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = questionTemplate(it, idx);
-        questionList.append(tr);
+        if(it.qid!=null){
+            it.qContent.forEach((content, cIndex) => {
+                let sendIndex = idx;
+                if(cIndex>0){
+                    sendIndex = null;
+                }
+                createItem(questionList, content, sendIndex);
+            });
+        }else{
+            createItem(questionList, it, idx);
+        }
       })
       }
 
+      const createItem = (questionList, content, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = questionTemplate(content, index);
+            questionList.append(tr);
+      }
+
       const questionTemplate = (question, idx) => {
-      return `
-      <td>${idx + 1}. ${question.topic}</td>
-      <td>${question.answer ? question.answer : '未作答'}</td>
-      `;
+        let htmlString = `
+            <td>${idx + 1}. ${question.topic}</td>
+            <td>${question.answer ? question.answer : '未作答'}</td>
+            `
+        if(idx==null)
+            htmlString = `
+            <td>${question.topic}</td>
+            <td>${question.answer ? question.answer : '未作答'}</td>
+            `
+        return htmlString;
       }
       
       init();

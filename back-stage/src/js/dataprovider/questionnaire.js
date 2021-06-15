@@ -43,7 +43,82 @@
         "required" : false,
         "topic" : "有什麼話想告訴老師嗎？",
         "type" : "問答題"
-      } ],
+      },{
+        "qContent" : [
+          {
+            "answer" : [
+              "新格式答案1",
+              "新格式答案2"
+            ],
+            "options" : [
+              "新格式",
+              "新格式2"
+            ],
+            "required" : false,
+            "topic" : "此題開始為新格式",
+            "type" : "單選題"
+          },
+          {
+            "answer" : [
+              "新格式下拉選單答案1",
+            ],
+            "options" : [
+              "新格式下拉",
+              "新格式下拉2"
+            ],
+            "required" : false,
+            "topic" : "與上同題",
+            "type" : "下拉選單"
+          }
+        ],
+        "qid" : "0"
+      },
+      {
+        "qContent" : [
+          {
+            "answer" : [
+              "新格式單選",
+            ],
+            "options" : [
+              "test",
+              "test"
+            ],
+            "required" : true,
+            "topic" : "test",
+            "type" : "單選題"
+          }
+        ],
+        "qid" : "4"
+      },
+      {
+        "qContent" : [
+          {
+            "options" : [
+              "123",
+              "4214"
+            ],
+            "required" : false,
+            "topic" : "test2",
+            "type" : "單選題"
+          },
+          {
+            "required" : false,
+            "topic" : "與上同題",
+            "type" : "問答題"
+          }
+        ],
+        "qid" : "5"
+      }],
+      "phase" : [
+        {
+          "lastQuestionId" : "4",
+          "phase" : 0
+        },
+        {
+          "lastQuestionId" : "5",
+          "phase" : 1
+        }
+      ],
       "enabled" : true,
       "callBackUrl" : "/finish.html",
       "finishMsg" : "感謝你的回饋",
@@ -154,6 +229,71 @@
         "required": true,
         "topic": "簡短的告訴老師，今天課堂上有遇到什麼問題呢？未來希望課堂如何調整呢？",
         "type": "問答題"
+      },{
+        "qContent" : [
+          {
+            "answer" : [
+              "新格式答案1",
+              "新格式答案2"
+            ],
+            "options" : [
+              "新格式",
+              "新格式2"
+            ],
+            "required" : false,
+            "topic" : "此題開始為新格式",
+            "type" : "單選題"
+          },
+          {
+            "answer" : [
+              "新格式下拉選單答案1",
+            ],
+            "options" : [
+              "新格式下拉",
+              "新格式下拉2"
+            ],
+            "required" : false,
+            "topic" : "與上同題",
+            "type" : "下拉選單"
+          }
+        ],
+        "qid" : "0"
+      },
+      {
+        "qContent" : [
+          {
+            "answer" : [
+              "新格式單選",
+            ],
+            "options" : [
+              "test",
+              "test"
+            ],
+            "required" : true,
+            "topic" : "test",
+            "type" : "單選題"
+          }
+        ],
+        "qid" : "1"
+      },
+      {
+        "qContent" : [
+          {
+            "options" : [
+              "123",
+              "4214"
+            ],
+            "required" : false,
+            "topic" : "test2",
+            "type" : "單選題"
+          },
+          {
+            "required" : false,
+            "topic" : "與上同題",
+            "type" : "問答題"
+          }
+        ],
+        "qid" : "2"
       }],
       "user": "5f01a554eb82b9000679db9c",
       "email": "fionlin0223@gmail.com",
@@ -185,13 +325,13 @@
     return await res.json();    
   };
 
-  const localSubmit = async () => {
+  const localSubmit = async (template) => {
     window.setTimeout(()=>{ return true; },300);
   };
 
   const submit = async (template) => {
     template.enabled = true;
-    const res = await fetch(`https://${host}/questionnaire/templates/create`,
+    const res = await fetch(`https://${host}/questionnaire/templates/create/v2`,
 					{			
 					method:'post',
 					headers: {
@@ -264,7 +404,7 @@
       return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnaire() : wwwQuestionnaire(id);
     }),
     submitTemplate: ((template) => {
-      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localSubmit() : submit(template);
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localSubmit(template) : submit(template);
     }),
     login: ((id_token) => { return login(id_token); }),
     logout: (() => { logout(); })

@@ -55,6 +55,14 @@ html(lang='tw')
         .hide {
             display: none;
         }
+        #addPhase{
+            position: absolute;
+            right: 0;
+        }
+        #errMsg{
+            position: absolute;
+            left: 0;
+        }
     body
         nav-bar(current="create")
         .container#app.mt-3
@@ -74,10 +82,12 @@ html(lang='tw')
                         .form-group.col-md-3 選項
                         .form-group.col-md-1 必填
                     div.questions                
-                        a-question(index="0")                    
+                        a-question(index="0" id='q0')                    
                     div.btn.btn-primary#addQuestion 新增題目                  
-                div
+                div(style="position: relative; height: 70px;")
                     small.text-danger#errMsg
+                    br
+                    div.btn.btn-primary#addPhase 新增答題階段  
                 p
                 .form-group
                     label(for='finishMsg') 結束訊息
