@@ -103,7 +103,7 @@
       let tempPhase = {}
       tempPhase.phase = phaseCount;
       tempPhase.lastQuestionId = it.id.split('divider-id-')[1];
-      tempPhase.callback = it.querySelector('.phaseCallBack').value;
+      tempPhase.callBack = it.querySelector('.phaseCallBack').value;
       phaseCount++;
       phase.push(tempPhase);
     });
