@@ -162,6 +162,11 @@
             errMsg += '多選題至少要有二個以上的選項 \n';
           }
         }
+        if (q.type === '下拉選單' || q.type === 'api 下拉選單' && q.options.length <= 1) {
+          if (errMsg.indexOf('下拉選單至少要有一個以上的選項 \n') === -1) {
+            errMsg += '下拉選單至少要有一個以上的選項 \n';
+          }
+        }
         if (q.options) {
           q.options.forEach(o => {
             if (!o) {
