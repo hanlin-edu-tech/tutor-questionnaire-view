@@ -4,6 +4,7 @@
     <option value="多選題">多選題</option>
     <option value="問答題">問答題</option>
     <option value="下拉選單">下拉選單</option>
+    <option value="api 下拉選單">api 下拉選單</option>
   </select>`;
 
   const mainDom = `

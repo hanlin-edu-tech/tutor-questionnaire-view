@@ -6,6 +6,9 @@ var totalItems = 0;
 var items = {};
 
 function initValue(itemList, pageType) {
+  if(pageType!== 'template'){
+    itemList = itemList.reverse();
+  }  
   totalItems = itemList.length;
   totalPages = Math.ceil(totalItems / perPage);
   items = itemList;
