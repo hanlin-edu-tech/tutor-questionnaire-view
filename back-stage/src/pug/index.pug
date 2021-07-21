@@ -6,23 +6,24 @@ html(lang='tw')
         meta(name='google-signin-scope', content='profile email')
         meta(name='google-signin-client_id', content='184800465453-m9hnsqo5o4ihqq15feiqfospq4olce50.apps.googleusercontent.com')
         link(rel='icon' type='image/png' href='./img/favicon.png')
+        script.
+            const host = window.location.hostname;
+            if(host.includes('.ehanlin.com.tw')){
+                document.querySelector('meta[name="google-signin-client_id"]').setAttribute('content', '745967530532-kr1mhm9c46r08l43oeanmhtd04ehgodp.apps.googleusercontent.com')
+            }
+
+            function onSignIn(googleUser) {     
+            let client_id = document.querySelector('meta[name="google-signin-client_id"]').getAttribute('content');
+            const googleAuth = gapi.auth2.getAuthInstance({client_id})
+            const auth = googleUser.getAuthResponse()
+            const id_token = auth.id_token
+            window.eHanlin.dataprovider.questionnaire.login(id_token);
+            googleAuth.disconnect();        
+            }
         script(src='https://apis.google.com/js/platform.js', async='', defer='')
     body            
         .g-signin2(data-onsuccess="onSignIn" data-theme="dark") 
         script(src="./js/dataprovider/questionnaire.js")
         script(src="./js/navbar.js")          
-        script.
-            function onSignIn(googleUser) {            
-            const host = window.location.hostname;
-            let client_id = document.querySelector('meta[name="google-signin-client_id"]').getAttribute('content');
-            if(host === 'www.ehanlin.com.tw'){
-                document.querySelector('meta[name="google-signin-client_id"]').setAttribute('content', '745967530532-kr1mhm9c46r08l43oeanmhtd04ehgodp.apps.googleusercontent.com')
-                client_id = document.querySelector('meta[name="google-signin-client_id"]').getAttribute('content');
-            }
-            const googleAuth = gapi.auth2.init({client_id})
-            const auth = googleUser.getAuthResponse()
-            const id_token = auth.id_token
-            googleAuth.disconnect();
-            window.eHanlin.dataprovider.questionnaire.login(id_token);        
-            }
+        
             

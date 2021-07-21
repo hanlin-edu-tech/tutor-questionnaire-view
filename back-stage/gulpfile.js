@@ -30,7 +30,7 @@ const gcsOptionProd = {
     projectId: projectIdProd,
     keyFileName: keyFileNameProd,
     bucket: bucketNameForProd,
-    cacheControl: 'public, max-age=10800'
+    cacheControl: 'no-store, no-transform'//'public, max-age=10800'
 };
 
 function buildHtml() {
