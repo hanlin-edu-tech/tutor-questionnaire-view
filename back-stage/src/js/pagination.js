@@ -6,7 +6,7 @@ var totalItems = 0;
 var items = {};
 
 function initValue(itemList, pageType) {
-  if(pageType!== 'template'){
+  if(pageType === 'questionnaire'){
     itemList = itemList.reverse();
   }  
   totalItems = itemList.length;
@@ -69,20 +69,37 @@ function addPageItems(startItem = 0) {
 }
 
 const itemTemplate = (item, type) => {
-  return type === 'template' ? 
-    `
-        <a href="./template.html?id=${item.id}" class="d-flex">
-          <div class="col-md-4 colTitle">${item.name}</div>
-          <div class="col-md-4">${item.author}</div>
-          <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
-        </a>
-    `:
-    `
-    <a href="./questionnaire.html?id=${item.id}" class="d-flex">
-      <div class="col-md-4 colTitle">${item.template.name}</div> 
-      <div class="col-md-4">${item.email}</div>
-      <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
-    </a>`;
+  let returnType = "";
+  switch(type){
+    case 'report':{
+      returnType = `
+      <a href="./report.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.name}</div>
+        <div class="col-md-4">${item.author}</div>
+        <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
+      </a>`;
+      break;
+    }
+    case 'template':{
+      returnType = `
+      <a href="./template.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.name}</div>
+        <div class="col-md-4">${item.author}</div>
+        <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
+      </a>`;
+      break;
+    }
+    case 'questionnaire':{
+      returnType = `
+      <a href="./questionnaire.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.template.name}</div> 
+        <div class="col-md-4">${item.email}</div>
+        <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
+      </a>`;
+      break;
+    }
+  }
+  return returnType;
 };
 
 const itemTemplateWithOutTime = (item, type) => {
