@@ -57,7 +57,7 @@
 			<li><a href="./create.html" class="create">新增問卷</a></li>
 			<li><a href="./list.html?type=template" class="template">樣板列表</a></li>
 			<li><a href="./list.html?type=questionnaire" class="questionnaire">問卷列表</a></li>		
-			<li><a href="./list.html?type=report" class="template">報表列表</a></li>		
+			<li><a href="./list.html?type=report" class="report">報表列表</a></li>		
 		</ul>
 		<div class="ml-auto logout"><a href="https://${window.location.hostname}/questionnaire/logout" class="logout ml-auto">登出</a></div>
     </nav>

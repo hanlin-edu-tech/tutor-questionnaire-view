@@ -103,20 +103,37 @@ const itemTemplate = (item, type) => {
 };
 
 const itemTemplateWithOutTime = (item, type) => {
-  return type === 'template' ? 
-    `
-        <a href="./template.html?id=${item.id}" class="d-flex">
-          <div class="col-md-4 colTitle">${item.name}</div>
-          <div class="col-md-4">${item.author}</div>
-          <div class="col-md-4">不明</div>
-        </a>
-    `:
-    `
-    <a href="./questionnaire.html?id=${item.id}" class="d-flex">
-      <div class="col-md-4 colTitle">${item.template.name}</div> 
-      <div class="col-md-4">${item.email}</div>
-      <div class="col-md-4">不明</div>
-    </a>`;
+  let returnType = "";
+  switch(type){
+    case 'report':{
+      returnType = `
+      <a href="./report.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.name}</div>
+        <div class="col-md-4">${item.author}</div>
+        <div class="col-md-4">不明</div>
+        </a>`;
+      break;
+    }
+    case 'template':{
+      returnType = `
+      <a href="./template.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.name}</div>
+        <div class="col-md-4">${item.author}</div>
+        <div class="col-md-4">不明</div>
+        </a>`;
+      break;
+    }
+    case 'questionnaire':{
+      returnType = `
+      <a href="./questionnaire.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.template.name}</div> 
+        <div class="col-md-4">${item.email}</div>
+        <div class="col-md-4">不明</div>
+        </a>`;
+      break;
+    }
+  }
+  return returnType;
 };
 
 function appendPrevButton() {

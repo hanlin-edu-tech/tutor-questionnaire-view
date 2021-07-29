@@ -1,0 +1,101 @@
+doctype html
+html(lang='tw')
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(charset='UTF-8')
+        meta(http-equiv='X-UA-Compatible', content='ie=edge')
+        meta(http-equiv='cache-control', content='no-cache')
+        meta(http-equiv='pragma', content='no-cache')
+        meta(http-equiv='expires', content='0')
+        link(rel='icon' type='image/png' href='./img/favicon.png')
+        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet")
+        title
+
+    body
+        nav-bar(current="report")        
+        #app.container.mt-3
+            h3 報表明細
+            div.datepicker
+                input#datepickerLeft 
+                p ~ 
+                input#datepickerRight
+            button.export 匯出
+            table.table.table-striped.table-bordered#questionList
+                tr
+                    //- td.table-info 題目
+                    //- td.table-info(width='80') 類型
+                    //- td.table-info 選項
+                    //- td.table-info(width='80') 必填
+    link(rel='stylesheet', href='./css/jquery-ui.min.css')
+    script(src="./js/jquery-3.3.1.min.js")
+    script(src="./js/jquery-ui.min.js")
+    script(src="./js/navbar.js")
+    script(src="./js/dataprovider/questionnaire.js")
+    script.
+      $(function() {
+        $( "#datepickerLeft" ).datepicker();
+        $( "#datepickerRight" ).datepicker();
+      });
+      (() => {
+      const search = (new URL(window.location)).searchParams;
+      const templateId = search.get('id');
+      let count = 50;
+
+      async function init(){
+
+      const template = await window.eHanlin.dataprovider.questionnaire.getQuestionnairesByTemplateId(templateId, count)
+          console.log(template);
+        composeTableTitle(template);
+        composeTableContent(template);
+      }
+
+      function composeTableTitle(template){
+        let table = document.querySelector('#questionList');
+        let tr = document.createElement('tr');
+        table.appendChild(tr);
+        template[0].questions.forEach((question)=>{
+                if(question.qContent!=null){
+                    question.qContent.forEach((content)=>{
+                        let td = document.createElement('td');
+                        td.classList.add('table-info');
+                        td.innerText = content.topic;
+                        tr.appendChild(td);
+                    });
+                }else{
+                    let td = document.createElement('td');
+                    td.classList.add('table-info');
+                    td.innerText = question.topic;
+                    tr.appendChild(td);
+                }
+            });
+      }
+
+      function composeTableContent(template){
+        let table = document.querySelector('#questionList');
+        template.forEach((it)=>{
+            let tr = document.createElement('tr');
+            table.appendChild(tr);
+            it.questions.forEach((question)=>{
+                if(question.qContent!=null){
+                    question.qContent.forEach((content)=>{
+                        let td = document.createElement('td');
+                        if(content.answer!=null)
+                            td.innerText = content.answer.join(',');
+                        else
+                            td.innerText = "未填寫";
+                        tr.appendChild(td);
+                    });
+                }else{
+                    let td = document.createElement('td');
+                    if(question.answer!=null)
+                            td.innerText = question.answer.join(',');
+                        else
+                            td.innerText = "未填寫";
+                    tr.appendChild(td);
+                }
+            });
+        });
+      }
+      
+      init();
+      })();
