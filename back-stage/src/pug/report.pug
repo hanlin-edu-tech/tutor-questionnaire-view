@@ -19,6 +19,13 @@ html(lang='tw')
                 input#datepickerLeft 
                 p ~ 
                 input#datepickerRight
+            div
+                h5 顯示資料數：
+                select.countSelect(name="countMenu")
+                    option(value="25") 25
+                    option(value="100") 100
+                    option(value="250") 250
+                    option(value="500") 500
             button.export 匯出
             table.table.table-striped.table-bordered#questionList
                 tr
@@ -39,35 +46,60 @@ html(lang='tw')
       (() => {
       const search = (new URL(window.location)).searchParams;
       const templateId = search.get('id');
-      let count = 50;
+      let count = 25;
 
-      async function init(){
+        async function getQuestionnaireData() {
+            return await window.eHanlin.dataprovider.questionnaire.getQuestionnairesByTemplateId(templateId, count);
+        }
 
-      const template = await window.eHanlin.dataprovider.questionnaire.getQuestionnairesByTemplateId(templateId, count)
-          console.log(template);
-        composeTableTitle(template);
-        composeTableContent(template);
-      }
+        function init(){
+            getQuestionnaireData().then(data => {
+                composeTableTitle(data);
+                composeTableContent(data);
+            });       
+
+            document.querySelector('.countSelect').addEventListener('change', (event) => {
+                count = event.target.value;
+                getQuestionnaireData().then(data => {
+                    composeTableTitle(data);
+                    composeTableContent(data);
+                });
+            });
+        }
 
       function composeTableTitle(template){
         let table = document.querySelector('#questionList');
+        table.innerHTML = "";
         let tr = document.createElement('tr');
         table.appendChild(tr);
         template[0].questions.forEach((question)=>{
                 if(question.qContent!=null){
                     question.qContent.forEach((content)=>{
-                        let td = document.createElement('td');
-                        td.classList.add('table-info');
-                        td.innerText = content.topic;
-                        tr.appendChild(td);
+                        if(content.topic!="與上同題"){
+                            let td = document.createElement('td');
+                            td.classList.add('table-info');
+                            td.innerText = topicRebuild(content.topic);
+                            tr.appendChild(td);
+                        }
                     });
                 }else{
                     let td = document.createElement('td');
                     td.classList.add('table-info');
-                    td.innerText = question.topic;
+                    td.innerText = topicRebuild(question.topic);
                     tr.appendChild(td);
                 }
             });
+      }
+
+      function topicRebuild(topic){
+          let returnTopic = topic;
+          if(topic.includes('${year}')){
+            returnTopic = topic.replace('${year}', new Date().getFullYear()-1911);
+          }
+          if(topic.includes('推薦人')){
+            returnTopic = "推薦人姓名(其他)";
+          }
+          return returnTopic;
       }
 
       function composeTableContent(template){
@@ -77,20 +109,30 @@ html(lang='tw')
             table.appendChild(tr);
             it.questions.forEach((question)=>{
                 if(question.qContent!=null){
-                    question.qContent.forEach((content)=>{
-                        let td = document.createElement('td');
-                        if(content.answer!=null)
-                            td.innerText = content.answer.join(',');
-                        else
-                            td.innerText = "未填寫";
-                        tr.appendChild(td);
+                    let prevTd = null;
+                    question.qContent.forEach((content, index)=>{
+                        if(content.topic!="與上同題"){
+                            let td = document.createElement('td');
+                            if(content.answer!=null)
+                                td.innerText = content.answer.join(',');
+                            else
+                                td.innerText = "未填寫";
+                            tr.appendChild(td);
+                            prevTd = td;
+                        }else{
+                            if(content.answer!=null)
+                                prevTd.innerText = `${prevTd.innerText}, ${content.answer.join(',')}`;
+                            else
+                                prevTd.innerText = `${prevTd.innerText}, 未填寫`;
+                            tr.appendChild(prevTd);
+                        }
                     });
                 }else{
                     let td = document.createElement('td');
                     if(question.answer!=null)
-                            td.innerText = question.answer.join(',');
-                        else
-                            td.innerText = "未填寫";
+                        td.innerText = question.answer.join(',');
+                    else
+                        td.innerText = "未填寫";
                     tr.appendChild(td);
                 }
             });
