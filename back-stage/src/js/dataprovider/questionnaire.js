@@ -335,8 +335,15 @@
     return await res.json();    
   };
 
-  const wwwQuestionnairesByTemplateId = async (id, count) => {
-    const res = await fetch(`https://${host}/questionnaire/templateId/${id}/${count}`)
+  const wwwQuestionnairesByTemplateId = async (id, count, date) => {
+    const res = await fetch(`https://${host}/questionnaire/templateId/${id}/${count}`, {
+      method: 'get',
+      body: JSON.stringify(date),
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+  })
     .catch(err => {
       console.error(err);
       alert('發生錯誤，請聯繫客服');
@@ -422,8 +429,8 @@
     getQuestionnaire: ((id) => {
       return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnaire() : wwwQuestionnaire(id);
     }),
-    getQuestionnairesByTemplateId: ((id, count) => {
-      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnairesByTemplateId() : wwwQuestionnairesByTemplateId(id, count);
+    getQuestionnairesByTemplateId: ((id, count, date) => {
+      return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localQuestionnairesByTemplateId() : wwwQuestionnairesByTemplateId(id, count, date);
     }),
     submitTemplate: ((template) => {
       return (window.location.protocol.toLowerCase() === 'file:' || window.location.hostname === 'localhost') ? localSubmit(template) : submit(template);

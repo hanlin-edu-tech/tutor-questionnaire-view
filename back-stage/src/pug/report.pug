@@ -40,11 +40,6 @@ html(lang='tw')
     script(src="./js/navbar.js")
     script(src="./js/dataprovider/questionnaire.js")
     script.
-      $(function() {
-        $( "#datepickerLeft" ).datepicker();
-        $( "#datepickerRight" ).datepicker();
-      });
-
       $(".export").click(function(){
           let now = new Date();
           now.setTime(now.getTime() + (8*60*60*1000));
@@ -55,28 +50,49 @@ html(lang='tw')
         });
       });
 
-
       (() => {
-      const search = (new URL(window.location)).searchParams;
-      const templateId = search.get('id');
-      let count = 25;
+        $( "#datepickerLeft" ).datepicker({
+            showButtonPanel: true,
+            gotoCurrent : true,
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd' });
+        $('#datepickerLeft').datepicker('setDate', 'today');
+        $( "#datepickerRight" ).datepicker({
+            showButtonPanel: true,
+            gotoCurrent : true,
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd' });
+        $('#datepickerRight').datepicker('setDate', 'today');
+        const search = (new URL(window.location)).searchParams;
+        const templateId = search.get('id');
+        let count = 25;
 
         async function getQuestionnaireData() {
-            return await window.eHanlin.dataprovider.questionnaire.getQuestionnairesByTemplateId(templateId, count);
+            let start = document.querySelector('#datepickerLeft').value;
+            let startArr = `${start} 00:00:00`.split(/-|\s|:/);
+            let startDate = new Date(startArr[0], startArr[1] -1, startArr[2], startArr[3], startArr[4], startArr[5]);
+            let end = document.querySelector('#datepickerRight').value;
+            let endArr = `${end} 23:59:59`.split(/-|\s|:/);
+            let endDate = new Date(endArr[0], endArr[1] -1, endArr[2], endArr[3], endArr[4], endArr[5]);
+            let date = {startDate: startDate, endDate: endDate};
+            return await window.eHanlin.dataprovider.questionnaire.getQuestionnairesByTemplateId(templateId, count, date);
         }
 
-        function init(){
+        function setDate(){
             getQuestionnaireData().then(data => {
                 composeTableTitle(data);
                 composeTableContent(data);
-            });       
+            });   
+        }
+
+        function init(){
+            setDate();
 
             document.querySelector('.countSelect').addEventListener('change', (event) => {
                 count = event.target.value;
-                getQuestionnaireData().then(data => {
-                    composeTableTitle(data);
-                    composeTableContent(data);
-                });
+                setDate();
             });
         }
 
