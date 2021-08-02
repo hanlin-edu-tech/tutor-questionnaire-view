@@ -23,6 +23,7 @@ html(lang='tw')
                 h5 顯示資料數：
                 select.countSelect(name="countMenu")
                     option(value="25") 25
+                    option(value="50") 50
                     option(value="100") 100
                     option(value="250") 250
                     option(value="500") 500
@@ -65,6 +66,7 @@ html(lang='tw')
             changeYear: true,
             dateFormat: 'yy-mm-dd' });
         $('#datepickerRight').datepicker('setDate', 'today');
+    
         const search = (new URL(window.location)).searchParams;
         const templateId = search.get('id');
         let count = 25;
@@ -76,6 +78,13 @@ html(lang='tw')
             let end = document.querySelector('#datepickerRight').value;
             let endArr = `${end} 23:59:59`.split(/-|\s|:/);
             let endDate = new Date(endArr[0], endArr[1] -1, endArr[2], endArr[3], endArr[4], endArr[5]);
+            if(startDate>endDate){
+                startArr = `${end} 00:00:00`.split(/-|\s|:/);
+                startDate = new Date(startArr[0], startArr[1] -1, startArr[2], startArr[3], startArr[4], startArr[5]);
+
+                endArr = `${start} 23:59:59`.split(/-|\s|:/);
+                endDate = new Date(endArr[0], endArr[1] -1, endArr[2], endArr[3], endArr[4], endArr[5]);
+            }
             let date = {startDate: startDate, endDate: endDate};
             return await window.eHanlin.dataprovider.questionnaire.getQuestionnairesByTemplateId(templateId, count, date);
         }
@@ -94,6 +103,13 @@ html(lang='tw')
                 count = event.target.value;
                 setDate();
             });
+
+            $( "#datepickerLeft" ).on('change', function(){
+                setDate();
+            });
+            $( "#datepickerRight" ).on('change', function(){
+                setDate();
+            });
         }
 
       function composeTableTitle(template){
@@ -101,7 +117,10 @@ html(lang='tw')
         table.innerHTML = "";
         let tr = document.createElement('tr');
         table.appendChild(tr);
-        template[0].questions.forEach((question)=>{
+        if(template.length==0 || template[0]["questions"]===undefined){
+            alert('此區間無資料');
+        }else{
+            template[0].questions.forEach((question)=>{
                 if(question.qContent!=null){
                     question.qContent.forEach((content)=>{
                         if(content.topic!="與上同題"){
@@ -118,6 +137,11 @@ html(lang='tw')
                     tr.appendChild(th);
                 }
             });
+            let th = document.createElement('th');
+            th.classList.add('table-info');
+            th.innerText = "填寫時間";
+            tr.appendChild(th);
+        }
       }
 
       function topicRebuild(topic){
@@ -165,6 +189,11 @@ html(lang='tw')
                     tr.appendChild(th);
                 }
             });
+            let th = document.createElement('th');
+            let time = new Date(it.finished);
+            time.setTime(time.getTime() + (8*60*60*1000));
+            th.innerText = time.toISOString().slice(0,19).replace('T', " ");
+            tr.appendChild(th);
         });
       }
       
