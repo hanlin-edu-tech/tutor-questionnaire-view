@@ -336,8 +336,8 @@
   };
 
   const wwwQuestionnairesByTemplateId = async (id, count, date) => {
-    const res = await fetch(`https://${host}/questionnaire/templateId/${id}/${count}`, {
-      method: 'get',
+    const res = await fetch(`https://${host}/questionnaire/questionnaires/templateId/${id}/${count}`, {
+      method: 'post',
       body: JSON.stringify(date),
       headers: {
           'Accept': 'application/json',
