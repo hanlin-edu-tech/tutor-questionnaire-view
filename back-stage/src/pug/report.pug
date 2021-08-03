@@ -15,26 +15,27 @@ html(lang='tw')
         nav-bar(current="report")        
         #app.container.mt-3
             h3 報表明細
-            div.datepicker
-                input#datepickerLeft 
-                p ~ 
-                input#datepickerRight
-            div
-                h5 顯示資料數：
-                select.countSelect(name="countMenu")
-                    option(value="25") 25
-                    option(value="50") 50
-                    option(value="100") 100
-                    option(value="250") 250
-                    option(value="500") 500
-            button.export 匯出
+            div.topRow
+                div.datepicker
+                    input#datepickerLeft 
+                    p 到 
+                    input#datepickerRight
+                button.export 匯出
+            div.displayRow
+                    h5 撈取資料數：
+                    select.countSelect(name="countMenu")
+                        option(value="50") 50
+                        option(value="100") 100
+                        option(value="250") 250
+                        option(value="500") 500 
+            nav.pagination-nav(aria-label="Page")
+                ul.pagination
+
             table.table.table-striped.table-bordered#questionList
                 tr
-                    //- td.table-info 題目
-                    //- td.table-info(width='80') 類型
-                    //- td.table-info 選項
-                    //- td.table-info(width='80') 必填
+
     link(rel='stylesheet', href='./css/jquery-ui.min.css')
+    link(rel='stylesheet', href='./css/report.css')
     script(src="./js/jquery-3.3.1.min.js")
     script(src="./js/jquery-ui.min.js")
     script(src="./js/jquery.table2excel.min.js")
@@ -69,7 +70,12 @@ html(lang='tw')
     
         const search = (new URL(window.location)).searchParams;
         const templateId = search.get('id');
-        let count = 25;
+        const pagination = 5; //nav一次顯示幾頁
+        const paginationCount = 25; //列表一次顯示幾筆
+        let count = 50;
+        let contentLength = 0;
+        let pageCount = 0;
+        let currentPage = 0;
 
         async function getQuestionnaireData() {
             let start = document.querySelector('#datepickerLeft').value;
@@ -92,7 +98,9 @@ html(lang='tw')
         function setDate(){
             getQuestionnaireData().then(data => {
                 composeTableTitle(data);
-                composeTableContent(data);
+                contentLength = document.querySelectorAll('.table-content').length;
+                pageCount = Math.ceil(contentLength/paginationCount);
+                setPagination();
             });   
         }
 
@@ -112,37 +120,189 @@ html(lang='tw')
             });
         }
 
-      function composeTableTitle(template){
-        let table = document.querySelector('#questionList');
-        table.innerHTML = "";
-        let tr = document.createElement('tr');
-        table.appendChild(tr);
-        if(template.length==0 || template[0]["questions"]===undefined){
-            alert('此區間無資料');
-        }else{
-            template[0].questions.forEach((question)=>{
-                if(question.qContent!=null){
-                    question.qContent.forEach((content)=>{
-                        if(content.topic!="與上同題"){
-                            let th = document.createElement('th');
-                            th.classList.add('table-info');
-                            th.innerText = topicRebuild(content.topic);
-                            tr.appendChild(th);
-                        }
-                    });
+        function setPagination(){
+            currentPage = 0;
+            let ul = document.querySelector('.pagination');
+            ul.innerHTML = "";
+
+            //previous pagination button
+            let liBefore10 = document.createElement('li');
+            liBefore10.addEventListener('click', (e) => {
+                let remain = currentPage%5;
+                changePage(-1*(pagination+remain));
+            });
+            liBefore10.classList.add('page-item');
+            let divBefore10 = document.createElement('div');
+            divBefore10.classList.add('page-link');
+            divBefore10.innerText = '<<';
+            liBefore10.appendChild(divBefore10);
+            ul.appendChild(liBefore10);  
+
+            //previous button
+            let liBefore = document.createElement('li');
+            liBefore.addEventListener('click', (e) => {
+                changePage(-1);
+            });
+            liBefore.classList.add('page-item');
+            let divBefore = document.createElement('div');
+            divBefore.classList.add('page-link');
+            divBefore.innerText = '<';
+            liBefore.appendChild(divBefore);
+            ul.appendChild(liBefore);    
+
+            for(let i = 0;i<contentLength;i++){
+                console.log(pageCount);
+                if(i==pagination || i==pageCount) break;
+
+                let li = document.createElement('li');
+                li.classList.add('page-item', 'page-item-content');
+                let div = document.createElement('div');
+                div.classList.add('page-link');
+                if(i==0){
+                    div.classList.add('bg-warning');
+                }
+                div.innerText = i+1;    
+                div.dataset.page = i;
+                li.appendChild(div);
+                li.addEventListener('click', (e) => {
+                    let current = document.querySelector('.bg-warning');
+                    if (current) current.classList.remove('bg-warning');
+                    e.target.classList.add('bg-warning');
+                    currentPage = parseInt(e.target.dataset.page);
+                    updatePageItems(currentPage);
+                });
+                ul.appendChild(li);            
+            }
+
+            //next button
+            let liAfter = document.createElement('li');
+            liAfter.addEventListener('click', (e) => {
+                changePage(1);
+            });
+            liAfter.classList.add('page-item');
+            let divAfter = document.createElement('div');
+            divAfter.classList.add('page-link');
+            divAfter.innerText = '>';
+            liAfter.appendChild(divAfter);
+            ul.appendChild(liAfter);    
+
+            //next pagination button 
+            let liAfter10 = document.createElement('li');
+            liAfter10.addEventListener('click', (e) => {
+                let remain = currentPage%5;
+                changePage(pagination-remain);
+            });
+            liAfter10.classList.add('page-item');
+            let divAfter10 = document.createElement('div');
+            divAfter10.classList.add('page-link');
+            divAfter10.innerText = '>>';
+            liAfter10.appendChild(divAfter10);
+            ul.appendChild(liAfter10);    
+
+            document.querySelectorAll('.table-content').forEach((it, index)=>{
+                if(index>=paginationCount){
+                    it.style.visibility = 'hidden';
+                    it.style.display = 'none';
                 }else{
-                    let th = document.createElement('th');
-                    th.classList.add('table-info');
-                    th.innerText = topicRebuild(question.topic);
-                    tr.appendChild(th);
+                    it.style.visibility = 'visible';
+                    it.style.display = '';
                 }
             });
-            let th = document.createElement('th');
-            th.classList.add('table-info');
-            th.innerText = "填寫時間";
-            tr.appendChild(th);
         }
-      }
+
+        function changePage(direction){
+            if((direction<0 && currentPage==0) || (direction>0 && currentPage==pageCount-1)) return;
+            if(currentPage+direction>pageCount-1) return;
+            currentPage += direction;
+            let currentPageTag = document.querySelector(`[data-page="${currentPage}"]`);
+            if(currentPageTag==null){
+                refreshPageTag();
+            }else{
+                currentPageHighLight();
+            }
+            updatePageItems(currentPage);
+        }
+
+        function refreshPageTag(){
+            let list = document.querySelectorAll('.page-item-content');
+            if(currentPage%pagination==0){
+                list.forEach((it, index)=>{
+                    it.style.display = "";
+                    let innerDiv = it.querySelector('.page-link');
+                    let tempPage = currentPage+index;
+                    innerDiv.dataset.page = tempPage;
+                    innerDiv.innerText = tempPage+1;
+                    if(tempPage>pageCount-1){
+                        it.style.display = "none";
+                    }
+                });
+            }else{
+                list.forEach((it, index)=>{
+                    it.style.display = "";
+                    let innerDiv = it.querySelector('.page-link');
+                    let tempPage = currentPage+index-pagination+1;
+                    innerDiv.dataset.page = tempPage;
+                    innerDiv.innerText = tempPage+1;
+                    if(tempPage>pageCount-1){
+                        it.style.display = "none";
+                    }
+                });
+            }
+            currentPageHighLight();
+        }
+
+        function currentPageHighLight(){
+            let current = document.querySelector('.bg-warning');
+            if (current) current.classList.remove('bg-warning');
+            let currentPageTag = document.querySelector(`[data-page="${currentPage}"]`);
+            currentPageTag.classList.add('bg-warning');
+        }
+
+        function updatePageItems(page){
+            let startNum = page*paginationCount;
+            document.querySelectorAll('.table-content').forEach((it, index)=>{
+                if(index>=startNum && index<startNum+paginationCount){
+                    it.style.visibility = 'visible';
+                    it.style.display = '';
+                }else{
+                    it.style.visibility = 'hidden';
+                    it.style.display = 'none';
+                }
+            });
+        }
+
+        function composeTableTitle(template){
+            let table = document.querySelector('#questionList');
+            table.innerHTML = "";
+            let tr = document.createElement('tr');
+            table.appendChild(tr);
+            if(template[0]===undefined || template[0]["questions"]===undefined){
+                alert('此區間無資料');
+            }else{
+                template[0].questions.forEach((question)=>{
+                    if(question.qContent!=null){
+                        question.qContent.forEach((content)=>{
+                            if(content.topic!="與上同題"){
+                                let th = document.createElement('th');
+                                th.classList.add('table-info');
+                                th.innerText = topicRebuild(content.topic);
+                                tr.appendChild(th);
+                            }
+                        });
+                    }else{
+                        let th = document.createElement('th');
+                        th.classList.add('table-info');
+                        th.innerText = topicRebuild(question.topic);
+                        tr.appendChild(th);
+                    }
+                });
+                let th = document.createElement('th');
+                th.classList.add('table-info');
+                th.innerText = "填寫時間";
+                tr.appendChild(th);
+                composeTableContent(template);
+            }
+        }
 
       function topicRebuild(topic){
           let returnTopic = topic;
@@ -159,6 +319,7 @@ html(lang='tw')
         let table = document.querySelector('#questionList');
         template.forEach((it)=>{
             let tr = document.createElement('tr');
+            tr.classList.add('table-content');
             table.appendChild(tr);
             it.questions.forEach((question)=>{
                 if(question.qContent!=null){

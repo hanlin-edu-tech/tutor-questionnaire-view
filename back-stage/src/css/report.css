@@ -1,0 +1,37 @@
+.topRow{
+    display:flex; 
+    flex-direction: row; 
+    float:right;
+    vertical-align: middle;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.datepicker{
+    display:flex; 
+    flex-direction: row; 
+    margin-right: 65px;
+    text-align: center;
+}
+
+.datepicker p{
+    margin: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.displayRow{
+    display:flex; 
+    flex-direction: row; 
+    float:left top;
+}
+
+.export{
+    position:absolute;
+    bottom: 0px;
+    right: 0px;
+}
+
+.pagination-nav{
+    margin-top:10px;
+}
