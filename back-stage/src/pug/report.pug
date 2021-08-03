@@ -24,10 +24,10 @@ html(lang='tw')
             div.displayRow
                     h5 撈取資料數：
                     select.countSelect(name="countMenu")
-                        option(value="50") 50
                         option(value="100") 100
                         option(value="250") 250
                         option(value="500") 500 
+                        option(value="1000") 1000 
             nav.pagination-nav(aria-label="Page")
                 ul.pagination
 
@@ -59,7 +59,9 @@ html(lang='tw')
             changeMonth: true,
             changeYear: true,
             dateFormat: 'yy-mm-dd' });
-        $('#datepickerLeft').datepicker('setDate', 'today');
+        let lastWeek = new Date();
+        lastWeek.setTime(lastWeek.getTime() - (24*60*60*1000*7));
+        $('#datepickerLeft').datepicker('setDate', lastWeek);
         $( "#datepickerRight" ).datepicker({
             showButtonPanel: true,
             gotoCurrent : true,
@@ -72,7 +74,7 @@ html(lang='tw')
         const templateId = search.get('id');
         const pagination = 5; //nav一次顯示幾頁
         const paginationCount = 25; //列表一次顯示幾筆
-        let count = 50;
+        let count = 100;
         let contentLength = 0;
         let pageCount = 0;
         let currentPage = 0;
@@ -151,7 +153,6 @@ html(lang='tw')
             ul.appendChild(liBefore);    
 
             for(let i = 0;i<contentLength;i++){
-                console.log(pageCount);
                 if(i==pagination || i==pageCount) break;
 
                 let li = document.createElement('li');
