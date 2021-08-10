@@ -11,7 +11,12 @@ html(lang='tw')
         link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet")
         title
     style(type="text/css").
-        #questionField {
+        #questionField{
+            background-color:#e3e3e3; 
+            padding:15px; 
+            border-radius:10px;
+        }
+        #tagField {
             background-color:#e3e3e3; 
             padding:15px; 
             border-radius:10px;
@@ -55,7 +60,7 @@ html(lang='tw')
         .hide {
             display: none;
         }
-        #addPhase{
+        .addButton{
             position: absolute;
             right: 0;
         }
@@ -87,7 +92,12 @@ html(lang='tw')
                 div(style="position: relative; height: 70px;")
                     small.text-danger#errMsg
                     br
-                    div.btn.btn-primary#addPhase 新增答題階段  
+                    div.btn.btn-primary.addButton#addPhase 新增答題階段  
+                div#tagField
+                    .form-row
+                        .form-group.col-md-6 Tag
+                    div  
+                        a-tag
                 p
                 .form-group
                     label(for='finishMsg') 結束訊息
@@ -105,6 +115,7 @@ html(lang='tw')
                 .success-banner
                 .success-text 送出成功
         script(src="./js/dataprovider/questionnaire.js")
+        script(src="./js/tag.js")
         script(src="./js/navbar.js")
         script(src="./js/create.js")
         script(src="./js/question.js")
