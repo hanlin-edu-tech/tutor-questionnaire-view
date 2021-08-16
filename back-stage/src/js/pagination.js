@@ -57,6 +57,9 @@ function addPageItems(startItem = 0) {
     const li = document.createElement('li');
     li.classList.add('list-group-item');
     li.classList.add('list-group-item-action');
+    if(it.tags==null || it.tags.length==0){
+      it.tags = [""];
+    }
     try {
       li.innerHTML = itemTemplate(it, type);
       list.append(li);
@@ -69,71 +72,39 @@ function addPageItems(startItem = 0) {
 }
 
 const itemTemplate = (item, type) => {
-  let returnType = "";
-  switch(type){
-    case 'report':{
-      returnType = `
-      <a href="./report.html?id=${item.id}" class="d-flex">
-        <div class="col-md-4 colTitle">${item.name}</div>
-        <div class="col-md-4">${item.author}</div>
-        <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
-      </a>`;
-      break;
-    }
-    case 'template':{
-      returnType = `
-      <a href="./template.html?id=${item.id}" class="d-flex">
-        <div class="col-md-4 colTitle">${item.name}</div>
-        <div class="col-md-4">${item.author}</div>
-        <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
-      </a>`;
-      break;
-    }
-    case 'questionnaire':{
-      returnType = `
-      <a href="./questionnaire.html?id=${item.id}" class="d-flex">
-        <div class="col-md-4 colTitle">${item.template.name}</div> 
-        <div class="col-md-4">${item.email}</div>
-        <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
-      </a>`;
-      break;
-    }
-  }
-  return returnType;
+  return type === 'template' ? 
+    `
+        <a href="./template.html?id=${item.id}" class="d-flex">
+          <div class="col-md-3 colTitle">${item.name}</div>
+          <div class="col-md-3">${item.author}</div>
+          <div class="col-md-3">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
+          <div class="col-md-3">${item.tags.join(',')}</div>
+        </a>
+    `:
+    `
+    <a href="./questionnaire.html?id=${item.id}" class="d-flex">
+      <div class="col-md-4 colTitle">${item.template.name}</div> 
+      <div class="col-md-4">${item.email}</div>
+      <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
+    </a>`;
 };
 
 const itemTemplateWithOutTime = (item, type) => {
-  let returnType = "";
-  switch(type){
-    case 'report':{
-      returnType = `
-      <a href="./report.html?id=${item.id}" class="d-flex">
-        <div class="col-md-4 colTitle">${item.name}</div>
-        <div class="col-md-4">${item.author}</div>
-        <div class="col-md-4">不明</div>
-        </a>`;
-      break;
-    }
-    case 'template':{
-      returnType = `
-      <a href="./template.html?id=${item.id}" class="d-flex">
-        <div class="col-md-4 colTitle">${item.name}</div>
-        <div class="col-md-4">${item.author}</div>
-        <div class="col-md-4">不明</div>
-        </a>`;
-      break;
-    }
-    case 'questionnaire':{
-      returnType = `
-      <a href="./questionnaire.html?id=${item.id}" class="d-flex">
-        <div class="col-md-4 colTitle">${item.template.name}</div> 
-        <div class="col-md-4">${item.email}</div>
-        <div class="col-md-4">不明</div>
-        </a>`;
-      break;
-    }
-  }
-  return returnType;
+  return type === 'template' ? 
+    `
+        <a href="./template.html?id=${item.id}" class="d-flex">
+          <div class="col-md-3 colTitle">${item.name}</div>
+          <div class="col-md-3">${item.author}</div>
+          <div class="col-md-3">不明</div>
+          <div class="col-md-3">${item.tags.join(',')}</div>
+        </a>
+    `:
+    `
+    <a href="./questionnaire.html?id=${item.id}" class="d-flex">
+      <div class="col-md-4 colTitle">${item.template.name}</div> 
+      <div class="col-md-4">${item.email}</div>
+      <div class="col-md-4">不明</div>
+    </a>`;
 };
 
 function appendPrevButton() {

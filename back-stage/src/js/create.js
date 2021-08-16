@@ -66,6 +66,17 @@
     document.querySelectorAll('[data-field]').forEach(it => {
       template[it.dataset.field] = it.value.trim();
     });
+    const tags = [];
+    document.querySelectorAll('a-tag').forEach(it => {
+      it.shadowRoot.querySelectorAll('.form-row').forEach(formIt => {
+        formIt.querySelectorAll(`[data-field="options"]`).forEach(op => {
+          let value = op.value;
+          if(value!==""){
+            tags.push(value);
+          }  
+        });
+      });
+    });
     const questions = [];
     refreshIndexBeforeSubmit();
     document.querySelectorAll('a-question').forEach(it => {
@@ -109,6 +120,7 @@
     });
     template.phase = phase;
     template.questions = questions;
+    template.tags = tags;
     console.log(JSON.stringify(template))
     return template;
   }

@@ -37,6 +37,17 @@ html(lang='tw')
             if(type === 'template' || type === 'report'){            
                 document.querySelector('title').innerText = '樣板列表';                
                 document.querySelector('.author').innerText = '問卷作者';
+
+                document.querySelectorAll('.colTitle').forEach((col)=>{
+                    col.classList.remove('col-md-4') ;
+                    col.classList.add('col-md-3') ;
+                });
+
+                let colTitleTag = document.createElement('div');
+                colTitleTag.classList.add('col-md-3', 'colTitle');
+                colTitleTag.innerText = "Tags";
+                document.querySelector('.list-group-item').appendChild(colTitleTag);
+
                 items = await window.eHanlin.dataprovider.questionnaire.getTemplates();
             }else{
                 document.querySelector('title').innerText = '問卷列表';            
