@@ -40,6 +40,9 @@ html(lang='tw')
                 tr
                     td.table-info 其他
                     td(data-field="extraInfo") 
+                tr
+                    td.table-info Tags
+                    td(data-field="tags") 
             table.table.table-striped.table-bordered#questionList
                 tr
                     td.table-info 題目
@@ -61,6 +64,9 @@ html(lang='tw')
       }
 
       function composeFields(template){
+          if(template.tags==null || template.tags.length==0){
+             template.tags = [""]; 
+          }
       document.querySelectorAll('[data-field]').forEach(it => {
       const field = it.dataset.field
       if(field === 'createDate'){

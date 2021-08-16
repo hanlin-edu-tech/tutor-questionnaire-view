@@ -6,6 +6,7 @@
         "author": "5c2c78a3ff5b3f000173bae5",
         "name": i,
         "enabled": true,
+        "tags": ['test1', 'test2'],
         "createDate": 1571973407772,
         "id": "5db2691f1a80720007936b01"
       });
@@ -26,6 +27,7 @@
         "processIdentifier" : 3795,
         "timeSecond" : 1568195526
       },
+      "tags": ['test1', 'test2'],
       "author" : "Test User",
       "name" : "課程",
       "description" : "上課回饋",
