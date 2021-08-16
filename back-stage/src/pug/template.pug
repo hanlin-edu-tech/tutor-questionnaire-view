@@ -110,13 +110,15 @@ html(lang='tw')
         const tr = document.createElement('tr');
         tr.innerHTML = questionTemplate(content, index);
         questionList.append(tr);
-        phase.forEach((p, pIndex)=>{
-            if(qid!=null && p.lastQuestionId==qid && index!=null){ //index null表與上同題
-                const divLine = document.createElement('div');
-                divLine.innerHTML = `---階段${p.phase+1}---`;
-                questionList.append(divLine);
-            }
-        });
+        if(phase!=null){
+            phase.forEach((p, pIndex)=>{
+                if(qid!=null && p.lastQuestionId==qid && index!=null){ //index null表與上同題
+                    const divLine = document.createElement('div');
+                    divLine.innerHTML = `---階段${p.phase+1}---`;
+                    questionList.append(divLine);
+                }
+            });
+        }
       }
 
       const questionTemplate = (question, idx) => {

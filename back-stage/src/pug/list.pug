@@ -34,7 +34,7 @@ html(lang='tw')
             const navbar = document.createElement('nav-bar');
             navbar.setAttribute('current', type);
             document.querySelector('body').insertBefore(navbar, document.querySelector('#app'))
-            if(type === 'template'){            
+            if(type === 'template' || type === 'report'){            
                 document.querySelector('title').innerText = '樣板列表';                
                 document.querySelector('.author').innerText = '問卷作者';
 

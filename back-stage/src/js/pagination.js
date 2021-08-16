@@ -6,7 +6,7 @@ var totalItems = 0;
 var items = {};
 
 function initValue(itemList, pageType) {
-  if(pageType!== 'template'){
+  if(pageType === 'questionnaire'){
     itemList = itemList.reverse();
   }  
   totalItems = itemList.length;
