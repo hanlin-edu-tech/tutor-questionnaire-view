@@ -73,7 +73,7 @@ async function copyStaticFromSrcToBuild() {
 async function uploadToGCS(gcsOption) {
     const storage = new Storage({
         projectId: gcsOption.projectId,
-        keyFileName: gcsOption.keyFileName
+        keyFilename: gcsOption.keyFileName
     });
     cleanGCS(gcsOption.bucket, storage)
         .then(async () => {
