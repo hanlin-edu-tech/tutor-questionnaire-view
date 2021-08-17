@@ -72,39 +72,75 @@ function addPageItems(startItem = 0) {
 }
 
 const itemTemplate = (item, type) => {
-  return type === 'template' ? 
-    `
-        <a href="./template.html?id=${item.id}" class="d-flex">
-          <div class="col-md-3 colTitle">${item.name}</div>
-          <div class="col-md-3">${item.author}</div>
-          <div class="col-md-3">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
-          <div class="col-md-3">${item.tags.join(',')}</div>
-        </a>
-    `:
-    `
-    <a href="./questionnaire.html?id=${item.id}" class="d-flex">
-      <div class="col-md-4 colTitle">${item.template.name}</div> 
-      <div class="col-md-4">${item.email}</div>
-      <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
-    </a>`;
+  let returnType = "";
+  switch(type){
+    case 'report':{
+      returnType = `
+      <a href="./report.html?id=${item.id}" class="d-flex">
+        <div class="col-md-3 colTitle">${item.name}</div>
+        <div class="col-md-3">${item.author}</div>
+        <div class="col-md-3">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
+        <div class="col-md-3">${item.tags.join(',')}</div>
+      </a>`;
+      break;
+    }
+    case 'template':{
+      returnType = `
+      <a href="./template.html?id=${item.id}" class="d-flex">
+        <div class="col-md-3 colTitle">${item.name}</div>
+        <div class="col-md-3">${item.author}</div>
+        <div class="col-md-3">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.createDate))}</div>
+        <div class="col-md-3">${item.tags.join(',')}</div>
+      </a>`;
+      break;
+    }
+    case 'questionnaire':{
+      returnType = `
+      <a href="./questionnaire.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.template.name}</div> 
+        <div class="col-md-4">${item.email}</div>
+        <div class="col-md-4">${Intl.DateTimeFormat('zh-TW', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(item.finished))}</div>
+      </a>`;
+      break;
+    }
+  }
+  return returnType;
 };
 
 const itemTemplateWithOutTime = (item, type) => {
-  return type === 'template' ? 
-    `
-        <a href="./template.html?id=${item.id}" class="d-flex">
-          <div class="col-md-3 colTitle">${item.name}</div>
-          <div class="col-md-3">${item.author}</div>
-          <div class="col-md-3">不明</div>
-          <div class="col-md-3">${item.tags.join(',')}</div>
-        </a>
-    `:
-    `
-    <a href="./questionnaire.html?id=${item.id}" class="d-flex">
-      <div class="col-md-4 colTitle">${item.template.name}</div> 
-      <div class="col-md-4">${item.email}</div>
-      <div class="col-md-4">不明</div>
-    </a>`;
+  let returnType = "";
+  switch(type){
+    case 'report':{
+      returnType = `
+      <a href="./report.html?id=${item.id}" class="d-flex">
+        <div class="col-md-3 colTitle">${item.name}</div>
+        <div class="col-md-3">${item.author}</div>
+        <div class="col-md-3">不明</div>
+        <div class="col-md-3">${item.tags.join(',')}</div>
+        </a>`;
+      break;
+    }
+    case 'template':{
+      returnType = `
+      <a href="./template.html?id=${item.id}" class="d-flex">
+        <div class="col-md-3 colTitle">${item.name}</div>
+        <div class="col-md-3">${item.author}</div>
+        <div class="col-md-3">不明</div>
+        <div class="col-md-3">${item.tags.join(',')}</div>
+        </a>`;
+      break;
+    }
+    case 'questionnaire':{
+      returnType = `
+      <a href="./questionnaire.html?id=${item.id}" class="d-flex">
+        <div class="col-md-4 colTitle">${item.template.name}</div> 
+        <div class="col-md-4">${item.email}</div>
+        <div class="col-md-4">不明</div>
+        </a>`;
+      break;
+    }
+  }
+  return returnType;
 };
 
 function appendPrevButton() {
