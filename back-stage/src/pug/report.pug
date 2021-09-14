@@ -22,12 +22,17 @@ html(lang='tw')
                     input#datepickerRight
                 button.export 匯出
             div.displayRow
-                    h5 撈取資料數：
-                    select.countSelect(name="countMenu")
-                        option(value="100") 100
-                        option(value="250") 250
-                        option(value="500") 500 
-                        option(value="1000") 1000 
+                h5 撈取資料數：
+                select.countSelect(name="countMenu")
+                    option(value="100") 100
+                    option(value="250") 250
+                    option(value="500") 500 
+                    option(value="1000") 1000 
+                
+                h5 類別：
+                select.typeSelect(name="typeMenu")
+                    option(value="0") 全部
+
             nav.pagination-nav(aria-label="Page")
                 ul.pagination
 
@@ -74,10 +79,13 @@ html(lang='tw')
         const templateId = search.get('id');
         const pagination = 5; //nav一次顯示幾頁
         const paginationCount = 25; //列表一次顯示幾筆
+
         let count = 100;
         let contentLength = 0;
         let pageCount = 0;
         let currentPage = 0;
+        let typeSelectNum = 0;
+        let originData = null;
 
         async function getQuestionnaireData() {
             let start = document.querySelector('#datepickerLeft').value;
@@ -99,19 +107,23 @@ html(lang='tw')
 
         function setDate(){
             getQuestionnaireData().then(data => {
-                composeTableTitle(data);
-                contentLength = document.querySelectorAll('.table-content').length;
-                pageCount = Math.ceil(contentLength/paginationCount);
-                setPagination();
+                originData = data;
+                composeTable(filterData(originData));
             });   
         }
 
         function init(){
+            addFilter();
             setDate();
 
             document.querySelector('.countSelect').addEventListener('change', (event) => {
                 count = event.target.value;
                 setDate();
+            });
+
+            document.querySelector('.typeSelect').addEventListener('change', (event) => {
+              typeSelectNum = event.target.value;
+              composeTable(filterData(originData))
             });
 
             $( "#datepickerLeft" ).on('change', function(){
@@ -120,6 +132,107 @@ html(lang='tw')
             $( "#datepickerRight" ).on('change', function(){
                 setDate();
             });
+        }
+
+        function addFilter(){
+            let selectMenu = document.querySelector('.typeSelect');
+
+            //專為E家教問卷開的filter
+            if(templateId == "60c99e88598cbb69e1e89501" /*測試機E家教問卷*/ || 
+                templateId == "60d2d80c223bda05a03bbb6b" /*正式機E家教問卷*/  ){
+                let option1 = document.createElement('option'); 
+                option1.value = 1;
+                option1.innerText = "國小";
+                selectMenu.appendChild(option1);
+
+                let option2 = document.createElement('option'); 
+                option2.value = 2;
+                option2.innerText = "國、高中";
+                selectMenu.appendChild(option2);
+
+                let option3 = document.createElement('option'); 
+                option3.value = 3;
+                option3.innerText = "未填寫";
+                selectMenu.appendChild(option3);   
+            }                   
+        }
+
+        function filterData(data){
+            let filterData = data;
+
+            //專為E家教問卷開的filter
+            if(templateId == "60c99e88598cbb69e1e89501" /*測試機E家教問卷*/ || 
+                templateId == "60d2d80c223bda05a03bbb6b" /*正式機E家教問卷*/  ){
+                filterData = data;
+                    
+                let ALL_GRADE = 0;
+                let ELEMENTARY_GRADE = 1; 
+                let HIGH_GRADE = 2; 
+                let NONE_GRADE = 3; 
+
+                switch(parseInt(typeSelectNum)){
+                    case ALL_GRADE:{
+                        filterData = data;
+                        break;
+                    }
+                    case ELEMENTARY_GRADE:{
+                        filterData = data.filter(datum => {
+                            let qGrade = datum.questions[3];
+                            if(!!qGrade){
+                                let answer = qGrade.qContent[0].answer;
+                                if(!!answer){
+                                    return answer[0].includes('國小');
+                                }else{
+                                    return false;
+                                }
+                            }else{
+                                return false;
+                            }
+                        });
+                        break;
+                    }
+                    case HIGH_GRADE:{
+                        filterData = data.filter(datum => {
+                            let qGrade = datum.questions[3];
+                            if(!!qGrade){
+                                let answer = qGrade.qContent[0].answer;
+                                if(!!answer){
+                                    return answer[0].includes('國中') || answer[0].includes('高中');
+                                }else{
+                                    return false;
+                                }
+                            }else{
+                                return false;
+                            }
+                        });
+                        break;
+                    }
+                    case NONE_GRADE:{
+                        filterData = data.filter(datum => {
+                            let qGrade = datum.questions[3];
+                            if(!!qGrade){
+                                let answer = qGrade.qContent[0].answer;
+                                if(!!answer){
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }else{
+                                return false;
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+            return filterData;
+        }
+
+        function composeTable(data){
+            composeTableTitle(data);
+            contentLength = document.querySelectorAll('.table-content').length;
+            pageCount = Math.ceil(contentLength/paginationCount);
+            setPagination();
         }
 
         function setPagination(){
