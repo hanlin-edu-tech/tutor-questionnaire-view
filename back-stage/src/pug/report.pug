@@ -297,10 +297,15 @@ html(lang='tw')
                         tr.appendChild(th);
                     }
                 });
-                let th = document.createElement('th');
-                th.classList.add('table-info');
-                th.innerText = "填寫時間";
-                tr.appendChild(th);
+                let thStarted = document.createElement('th');
+                thStarted.classList.add('table-info');
+                thStarted.innerText = "填寫時間";
+                tr.appendChild(thStarted);
+
+                let thFinished = document.createElement('th');
+                thFinished.classList.add('table-info');
+                thFinished.innerText = "完成時間";
+                tr.appendChild(thFinished);
                 composeTableContent(template);
             }
         }
@@ -351,11 +356,22 @@ html(lang='tw')
                     tr.appendChild(th);
                 }
             });
-            let th = document.createElement('th');
-            let time = new Date(it.finished);
-            time.setTime(time.getTime() + (8*60*60*1000));
-            th.innerText = time.toISOString().slice(0,19).replace('T', " ");
-            tr.appendChild(th);
+
+            let thStarted = document.createElement('th');
+            if(it.started!=null){
+                let time = new Date(it.started);
+                time.setTime(time.getTime() + (8*60*60*1000));
+                thStarted.innerText = time.toISOString().slice(0,19).replace('T', " ");
+            }
+            tr.appendChild(thStarted);
+
+            let thFinished = document.createElement('th');
+            if(it.finished!=null){
+                let time = new Date(it.finished);
+                time.setTime(time.getTime() + (8*60*60*1000));
+                thFinished.innerText = time.toISOString().slice(0,19).replace('T', " ");
+            }
+            tr.appendChild(thFinished);
         });
       }
       
