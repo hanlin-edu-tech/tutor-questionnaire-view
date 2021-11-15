@@ -42,7 +42,12 @@ html(lang='tw')
 
       function composeFields(questionnaire){
       document.querySelector('[data-field="name"]').innerText = questionnaire.template.name;
-      document.querySelector('[data-field="finished"]').innerText = Intl.DateTimeFormat('zh-TW').format(new Date(questionnaire.finished));
+      if(questionnaire.started!=null){
+        document.querySelector('[data-field="finished"]').innerText = Intl.DateTimeFormat('zh-TW').format(new Date(questionnaire.started));
+      }else{
+        document.querySelector('[data-field="finished"]').innerText = "不明";
+
+      }
       document.querySelector('[data-field="email"]').innerText = questionnaire.email;
       const questionList = document.querySelector('#questionList');
       questionnaire.questions.forEach((it, idx) => {
