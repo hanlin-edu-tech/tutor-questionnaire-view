@@ -274,10 +274,13 @@ html(lang='tw')
         }
 
         function composeTableTitle(template){
+            qidList = [];
             let table = document.querySelector('#questionList');
             table.innerHTML = "";
+            let thead =  document.createElement('thead');
             let tr = document.createElement('tr');
-            table.appendChild(tr);
+            thead.append(tr)
+            table.appendChild(thead);
             if(template[0]===undefined || template[0]["questions"]===undefined){
                 alert('此區間無資料');
             }else{
@@ -335,62 +338,64 @@ html(lang='tw')
 
       function composeTableContent(template){
         let table = document.querySelector('#questionList');
+        let tbody = document.createElement('tbody');
+        table.appendChild(tbody);
         template.forEach((it)=>{
             let tr = document.createElement('tr');
             tr.classList.add('table-content');
-            table.appendChild(tr);
+            tbody.append(tr);
             qidList.forEach((ele)=>{
                 let findQuestion = it.questions.find(item => item.qid === ele);
                 if(findQuestion){
                     if(findQuestion.qContent!=null){
-                        let prevTh = null;
+                        let prevTd = null;
                         findQuestion.qContent.forEach((content, index)=>{
                             if(content.topic!="與上同題"){
-                                let th = document.createElement('th');
+                                let td = document.createElement('td');
                                 if(content.answer!=null)
-                                    th.innerText = content.answer.join(',');
+                                    td.innerText = content.answer.join(',');
                                 else
-                                    th.innerText = "未填寫";
-                                tr.appendChild(th);
-                                prevTh = th;
+                                    td.innerText = "未填寫";
+                                tr.appendChild(td);
+                                prevTd = td;
                             }else{
                                 if(content.answer!=null)
-                                    prevTh.innerText = `${prevTh.innerText}, ${content.answer.join(',')}`;
+                                    prevTd.innerText = `${prevTd.innerText}, ${content.answer.join(',')}`;
                                 else
-                                    prevTh.innerText = `${prevTh.innerText}, 未填寫`;
-                                tr.appendChild(prevTh);
+                                    prevTd.innerText = `${prevTd.innerText}, 未填寫`;
+                                tr.appendChild(prevTd);
                             }
                         });
                     }else{
-                        let th = document.createElement('th');
+                        let td = document.createElement('td');
                         if(findQuestion.answer!=null)
-                            th.innerText = findQuestion.answer.join(',');
+                            td.innerText = findQuestion.answer.join(',');
                         else
-                            th.innerText = "未填寫";
-                        tr.appendChild(th);
+                            td.innerText = "未填寫";
+                        tr.appendChild(td);
                     }
                 }else{
-                    let th = document.createElement('th');
-                    th.innerText = "";
-                    tr.appendChild(th);
+                    let td = document.createElement('td');
+                    td.innerText = "";
+                    tr.appendChild(td);
                 }
             })
 
-            let thStarted = document.createElement('th');
+            let tdStarted = document.createElement('td');
             if(it.started!=null){
                 let time = new Date(it.started);
                 time.setTime(time.getTime() + (8*60*60*1000));
-                thStarted.innerText = time.toISOString().slice(0,19).replace('T', " ");
+                tdStarted.innerText = time.toISOString().slice(0,19).replace('T', " ");
             }
-            tr.appendChild(thStarted);
+            tr.appendChild(tdStarted);
 
-            let thFinished = document.createElement('th');
+            let tdFinished = document.createElement('td');
             if(it.finished!=null){
                 let time = new Date(it.finished);
                 time.setTime(time.getTime() + (8*60*60*1000));
-                thFinished.innerText = time.toISOString().slice(0,19).replace('T', " ");
+                tdFinished.innerText = time.toISOString().slice(0,19).replace('T', " ");
             }
-            tr.appendChild(thFinished);
+            tr.appendChild(tdFinished);
         });
       }
       
