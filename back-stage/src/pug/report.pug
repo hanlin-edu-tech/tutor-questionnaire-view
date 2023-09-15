@@ -78,6 +78,7 @@ html(lang='tw')
         let contentLength = 0;
         let pageCount = 0;
         let currentPage = 0;
+        var qidList = [];
 
         async function getQuestionnaireData() {
             let start = document.querySelector('#datepickerLeft').value;
@@ -280,10 +281,20 @@ html(lang='tw')
             if(template[0]===undefined || template[0]["questions"]===undefined){
                 alert('此區間無資料');
             }else{
-                template[0].questions.forEach((question)=>{
+                let maxLengthQuestion = 0;
+                let maxLengthQuestionTemplate = null;
+                template.forEach((ele)=>{
+                    if(ele.questions.length >= maxLengthQuestion){
+                        maxLengthQuestion = ele.questions.length;
+                        maxLengthQuestionTemplate = ele;
+                    }
+                })
+            
+                maxLengthQuestionTemplate.questions.forEach((question)=>{
                     if(question.qContent!=null){
                         question.qContent.forEach((content)=>{
                             if(content.topic!="與上同題"){
+                                qidList.push(question.qid);
                                 let th = document.createElement('th');
                                 th.classList.add('table-info');
                                 th.innerText = topicRebuild(content.topic);
@@ -291,6 +302,7 @@ html(lang='tw')
                             }
                         });
                     }else{
+                        qidList.push(question.qid);
                         let th = document.createElement('th');
                         th.classList.add('table-info');
                         th.innerText = topicRebuild(question.topic);
@@ -327,35 +339,42 @@ html(lang='tw')
             let tr = document.createElement('tr');
             tr.classList.add('table-content');
             table.appendChild(tr);
-            it.questions.forEach((question)=>{
-                if(question.qContent!=null){
-                    let prevTh = null;
-                    question.qContent.forEach((content, index)=>{
-                        if(content.topic!="與上同題"){
-                            let th = document.createElement('th');
-                            if(content.answer!=null)
-                                th.innerText = content.answer.join(',');
-                            else
-                                th.innerText = "未填寫";
-                            tr.appendChild(th);
-                            prevTh = th;
-                        }else{
-                            if(content.answer!=null)
-                                prevTh.innerText = `${prevTh.innerText}, ${content.answer.join(',')}`;
-                            else
-                                prevTh.innerText = `${prevTh.innerText}, 未填寫`;
-                            tr.appendChild(prevTh);
-                        }
-                    });
+            qidList.forEach((ele)=>{
+                let findQuestion = it.questions.find(item => item.qid === ele);
+                if(findQuestion){
+                    if(findQuestion.qContent!=null){
+                        let prevTh = null;
+                        findQuestion.qContent.forEach((content, index)=>{
+                            if(content.topic!="與上同題"){
+                                let th = document.createElement('th');
+                                if(content.answer!=null)
+                                    th.innerText = content.answer.join(',');
+                                else
+                                    th.innerText = "未填寫";
+                                tr.appendChild(th);
+                                prevTh = th;
+                            }else{
+                                if(content.answer!=null)
+                                    prevTh.innerText = `${prevTh.innerText}, ${content.answer.join(',')}`;
+                                else
+                                    prevTh.innerText = `${prevTh.innerText}, 未填寫`;
+                                tr.appendChild(prevTh);
+                            }
+                        });
+                    }else{
+                        let th = document.createElement('th');
+                        if(findQuestion.answer!=null)
+                            th.innerText = findQuestion.answer.join(',');
+                        else
+                            th.innerText = "未填寫";
+                        tr.appendChild(th);
+                    }
                 }else{
                     let th = document.createElement('th');
-                    if(question.answer!=null)
-                        th.innerText = question.answer.join(',');
-                    else
-                        th.innerText = "未填寫";
+                    th.innerText = "無此資料";
                     tr.appendChild(th);
                 }
-            });
+            })
 
             let thStarted = document.createElement('th');
             if(it.started!=null){
